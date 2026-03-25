@@ -6,20 +6,20 @@
 <title>🅿️ Noi Parcheggio</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap');
-
+ 
   :root {
     --bg: #0d0d0d;
     --card: #161616;
     --green: #00e676;
     --green-dim: #00e67622;
-    --yellow: #ffd600;
     --text: #f0f0f0;
     --muted: #666;
     --border: #2a2a2a;
+    --tg: #29b6f6;
   }
-
+ 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
+ 
   body {
     background: var(--bg);
     color: var(--text);
@@ -31,8 +31,7 @@
     padding: 24px 20px 40px;
     overflow-x: hidden;
   }
-
-  /* Animated grid background */
+ 
   body::before {
     content: '';
     position: fixed;
@@ -44,499 +43,211 @@
     pointer-events: none;
     z-index: 0;
   }
-
-  .container {
-    position: relative;
-    z-index: 1;
+ 
+  .screen { display: none; width: 100%; max-width: 420px; }
+  .screen.active { display: flex; flex-direction: column; align-items: center; gap: 24px; position: relative; z-index: 1; }
+ 
+  /* PIN */
+  .pin-wrap {
     width: 100%;
-    max-width: 420px;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 24px;
+    justify-content: center;
+    gap: 32px;
+    padding: 40px 20px;
   }
-
-  /* Header */
-  .header {
-    text-align: center;
-    padding-top: 16px;
-  }
-
-  .logo {
-    font-family: 'Syne', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--green);
-    margin-bottom: 10px;
-    opacity: 0.8;
-  }
-
-  .title {
-    font-family: 'Syne', sans-serif;
-    font-size: 36px;
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -1px;
-  }
-
-  .title span {
-    color: var(--green);
-  }
-
-  .subtitle {
-    margin-top: 8px;
-    font-size: 14px;
-    color: var(--muted);
-    font-weight: 300;
-  }
-
-  /* Car selector */
-  .car-selector {
-    width: 100%;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 20px;
-  }
-
-  .car-selector label {
-    display: block;
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 12px;
-  }
-
-  .cars {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
-  .car-btn {
-    background: transparent;
+  .pin-logo { font-family: 'Syne', sans-serif; font-size: 48px; line-height: 1; }
+  .pin-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; text-align: center; }
+  .pin-subtitle { font-size: 13px; color: var(--muted); text-align: center; margin-top: -20px; }
+  .pin-dots { display: flex; gap: 16px; }
+  .pin-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--border); transition: all .15s ease; }
+  .pin-dot.filled { background: var(--green); border-color: var(--green); transform: scale(1.1); }
+  .pin-dot.error { background: #ff5252; border-color: #ff5252; }
+  .pin-keypad { display: grid; grid-template-columns: repeat(3, 72px); gap: 12px; }
+  .pin-key {
+    width: 72px; height: 72px;
+    border-radius: 50%;
     border: 1.5px solid var(--border);
-    border-radius: 14px;
-    padding: 14px 10px;
+    background: var(--card);
     color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
     cursor: pointer;
-    transition: all .2s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
+    transition: all .1s ease;
+    display: flex; align-items: center; justify-content: center;
   }
-
+  .pin-key:active { transform: scale(.92); background: #222; }
+  .pin-key.empty { border: none; background: transparent; cursor: default; }
+  .pin-error-msg { font-size: 13px; color: #ff5252; min-height: 18px; text-align: center; }
+ 
+  /* HEADER */
+  .header { text-align: center; padding-top: 16px; width: 100%; }
+  .logo { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--green); margin-bottom: 10px; opacity: 0.8; }
+  .title { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; line-height: 1.1; letter-spacing: -1px; }
+  .title span { color: var(--green); }
+  .subtitle { margin-top: 8px; font-size: 14px; color: var(--muted); font-weight: 300; }
+ 
+  /* CAR SELECTOR */
+  .car-selector { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; }
+  .car-selector label { display: block; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .cars { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .car-btn { background: transparent; border: 1.5px solid var(--border); border-radius: 14px; padding: 14px 10px; color: var(--text); font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all .2s ease; display: flex; flex-direction: column; align-items: center; gap: 6px; }
   .car-btn .car-icon { font-size: 24px; }
   .car-btn .car-name { font-size: 13px; font-weight: 600; }
   .car-btn .car-plate { font-size: 10px; color: var(--muted); letter-spacing: 1px; }
-
   .car-btn:hover { border-color: var(--green); }
-
-  .car-btn.active {
-    border-color: var(--green);
-    background: var(--green-dim);
-    color: var(--green);
-  }
+  .car-btn.active { border-color: var(--green); background: var(--green-dim); color: var(--green); }
   .car-btn.active .car-plate { color: var(--green); opacity: 0.7; }
-
-  /* Main button */
+ 
+  /* PARK BUTTON */
   .park-btn {
-    width: 100%;
-    position: relative;
-    background: var(--green);
-    color: #000;
-    border: none;
-    border-radius: 20px;
-    padding: 22px;
-    font-family: 'Syne', sans-serif;
-    font-size: 20px;
-    font-weight: 800;
-    letter-spacing: -.3px;
-    cursor: pointer;
-    transition: all .2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    overflow: hidden;
+    width: 100%; position: relative; background: var(--green); color: #000; border: none;
+    border-radius: 20px; padding: 22px; font-family: 'Syne', sans-serif; font-size: 20px;
+    font-weight: 800; cursor: pointer; transition: all .2s ease;
+    display: flex; align-items: center; justify-content: center; gap: 12px; overflow: hidden;
   }
-
-  .park-btn::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,.15) 0%, transparent 60%);
-  }
-
+  .park-btn::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,.15) 0%, transparent 60%); }
   .park-btn:active { transform: scale(.97); }
-  .park-btn:disabled {
-    background: #333;
-    color: #555;
-    cursor: not-allowed;
-    transform: none;
-  }
-
+  .park-btn:disabled { background: #333; color: #555; cursor: not-allowed; transform: none; }
   .park-btn .btn-icon { font-size: 28px; }
-
-  /* Pulse ring on button */
   .park-btn:not(:disabled)::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: 22px;
-    background: transparent;
-    border: 2px solid var(--green);
-    animation: pulse-ring 2.5s ease-out infinite;
-    opacity: 0;
+    content: ''; position: absolute; inset: -2px; border-radius: 22px;
+    background: transparent; border: 2px solid var(--green);
+    animation: pulse-ring 2.5s ease-out infinite; opacity: 0;
   }
-
-  @keyframes pulse-ring {
-    0% { transform: scale(1); opacity: .5; }
-    100% { transform: scale(1.04); opacity: 0; }
-  }
-
-  /* Status card */
-  .status-card {
-    width: 100%;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 20px;
-    display: none;
-  }
-
+  @keyframes pulse-ring { 0% { transform: scale(1); opacity: .5; } 100% { transform: scale(1.04); opacity: 0; } }
+ 
+  /* STATUS CARD */
+  .status-card { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; display: none; }
   .status-card.visible { display: block; }
-
-  .status-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-
-  .status-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--green);
-    flex-shrink: 0;
-    animation: blink 1.5s ease-in-out infinite;
-  }
-
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: .3; }
-  }
-
-  .status-title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-  }
-
-  .status-time {
-    margin-left: auto;
-    font-size: 11px;
-    color: var(--muted);
-  }
-
-  .coords-row {
-    background: #0a0a0a;
-    border-radius: 12px;
-    padding: 14px 16px;
-    margin-bottom: 14px;
-    font-size: 13px;
-    color: var(--muted);
-    letter-spacing: .5px;
-    font-family: 'DM Mono', monospace;
-    word-break: break-all;
-    line-height: 1.8;
-  }
-
+  .status-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; animation: blink 1.5s ease-in-out infinite; }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+  .status-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; }
+  .status-time { margin-left: auto; font-size: 11px; color: var(--muted); }
+  .coords-row { background: #0a0a0a; border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; font-size: 13px; color: var(--muted); letter-spacing: .5px; line-height: 1.8; }
   .coords-row span { color: var(--green); }
-
-  .action-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
-  .action-btn {
-    background: transparent;
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    padding: 13px 10px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all .2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    text-decoration: none;
-  }
-
+  .action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .action-btn { background: transparent; border: 1.5px solid var(--border); border-radius: 12px; padding: 13px 10px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
   .action-btn:hover { border-color: var(--green); color: var(--green); }
-  .action-btn.whatsapp { border-color: #25D366; color: #25D366; }
-  .action-btn.whatsapp:hover { background: #25D36620; }
-
-  /* History */
-  .history {
-    width: 100%;
-  }
-
-  .history-title {
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 12px;
-  }
-
-  .history-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .history-item {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 14px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    animation: slide-in .3s ease;
-  }
-
-  @keyframes slide-in {
-    from { opacity: 0; transform: translateY(-8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
+  .action-btn.telegram { border-color: var(--tg); color: var(--tg); }
+  .action-btn.telegram:hover { background: #29b6f620; }
+  .action-btn.telegram:disabled { opacity: .35; cursor: not-allowed; }
+ 
+  /* HISTORY */
+  .history { width: 100%; }
+  .history-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .history-title { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  .settings-link { font-size: 12px; color: var(--muted); cursor: pointer; background: none; border: none; font-family: 'DM Sans', sans-serif; }
+  .history-list { display: flex; flex-direction: column; gap: 8px; }
+  .history-item { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; animation: slide-in .3s ease; }
+  @keyframes slide-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
   .history-car { font-size: 22px; }
-
   .history-info { flex: 1; }
   .history-info .h-name { font-size: 13px; font-weight: 600; }
   .history-info .h-time { font-size: 11px; color: var(--muted); margin-top: 2px; }
-
-  .history-link {
-    font-size: 11px;
-    color: var(--green);
-    text-decoration: none;
-    border: 1px solid var(--green);
-    border-radius: 8px;
-    padding: 5px 10px;
-    white-space: nowrap;
-  }
-
-  /* Loading overlay */
-  .loading {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.7);
-    backdrop-filter: blur(4px);
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    z-index: 100;
-  }
-
+  .history-link { font-size: 11px; color: var(--green); text-decoration: none; border: 1px solid var(--green); border-radius: 8px; padding: 5px 10px; white-space: nowrap; }
+  .empty-history { text-align: center; padding: 20px; color: var(--muted); font-size: 13px; }
+ 
+  /* LOADING */
+  .loading { position: fixed; inset: 0; background: rgba(0,0,0,.7); backdrop-filter: blur(4px); display: none; flex-direction: column; align-items: center; justify-content: center; gap: 20px; z-index: 100; }
   .loading.show { display: flex; }
-
-  .spinner {
-    width: 56px; height: 56px;
-    border-radius: 50%;
-    border: 3px solid #333;
-    border-top-color: var(--green);
-    animation: spin .8s linear infinite;
-  }
-
+  .spinner { width: 56px; height: 56px; border-radius: 50%; border: 3px solid #333; border-top-color: var(--green); animation: spin .8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  .loading-text {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    color: var(--green);
-    letter-spacing: 1px;
-  }
-
-  /* Toast */
-  .toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: var(--green);
-    color: #000;
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-    padding: 14px 24px;
-    border-radius: 50px;
-    transition: transform .35s cubic-bezier(.34,1.56,.64,1);
-    z-index: 200;
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
+  .loading-text { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; color: var(--green); }
+ 
+  /* TOAST */
+  .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--green); color: #000; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; padding: 14px 24px; border-radius: 50px; transition: transform .35s cubic-bezier(.34,1.56,.64,1); z-index: 200; white-space: nowrap; }
   .toast.show { transform: translateX(-50%) translateY(0); }
-  .toast.error { background: #ff5252; }
-
-  /* Empty history */
-  .empty-history {
-    text-align: center;
-    padding: 20px;
-    color: var(--muted);
-    font-size: 13px;
-  }
-
-  /* Setup modal */
-  .modal-bg {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.85);
-    backdrop-filter: blur(6px);
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    z-index: 150;
-    padding: 20px;
-  }
-
+  .toast.error { background: #ff5252; color: #fff; }
+ 
+  /* MODAL */
+  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.85); backdrop-filter: blur(6px); display: flex; align-items: flex-end; justify-content: center; z-index: 150; padding: 20px; }
   .modal-bg.hidden { display: none; }
-
-  .modal {
-    background: #1a1a1a;
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 28px 24px 32px;
-    width: 100%;
-    max-width: 420px;
-  }
-
-  .modal h2 {
-    font-family: 'Syne', sans-serif;
-    font-size: 22px;
-    font-weight: 800;
-    margin-bottom: 6px;
-  }
-
-  .modal p {
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 20px;
-    line-height: 1.5;
-  }
-
-  .input-group {
-    margin-bottom: 14px;
-  }
-
-  .input-group label {
-    display: block;
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 8px;
-  }
-
-  .input-group input {
-    width: 100%;
-    background: #0d0d0d;
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    padding: 14px 16px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    outline: none;
-    transition: border-color .2s;
-  }
-
+  .modal { background: #1a1a1a; border: 1px solid var(--border); border-radius: 24px; padding: 28px 24px 32px; width: 100%; max-width: 420px; max-height: 90dvh; overflow-y: auto; }
+  .modal h2 { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+  .modal p { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
+  .input-group { margin-bottom: 14px; }
+  .input-group label { display: block; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .input-group input { width: 100%; background: #0d0d0d; border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 16px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; outline: none; transition: border-color .2s; }
   .input-group input:focus { border-color: var(--green); }
   .input-group input::placeholder { color: #444; }
-
-  .modal-btn {
-    width: 100%;
-    background: var(--green);
-    color: #000;
-    border: none;
-    border-radius: 14px;
-    padding: 18px;
-    font-family: 'Syne', sans-serif;
-    font-size: 17px;
-    font-weight: 800;
-    cursor: pointer;
-    margin-top: 8px;
-    transition: opacity .2s;
-  }
-
+  .modal-btn { width: 100%; background: var(--green); color: #000; border: none; border-radius: 14px; padding: 18px; font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 800; cursor: pointer; margin-top: 8px; }
   .modal-btn:active { opacity: .85; }
-
-  .walink-note {
-    background: #25D36615;
-    border: 1px solid #25D36630;
-    border-radius: 12px;
-    padding: 12px 14px;
-    font-size: 12px;
-    color: #aaa;
-    line-height: 1.5;
-    margin-bottom: 16px;
-  }
-
-  .walink-note strong { color: #25D366; }
+  .modal-btn.secondary { background: #222; color: var(--muted); }
+  .section-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--tg); margin: 20px 0 12px; display: block; }
+  .tg-note { background: #29b6f610; border: 1px solid #29b6f630; border-radius: 12px; padding: 12px 14px; font-size: 12px; color: #aaa; line-height: 1.6; margin-bottom: 14px; }
+  .tg-note strong { color: var(--tg); }
+  .divider { width: 100%; border: none; border-top: 1px solid var(--border); margin: 8px 0 20px; }
 </style>
 </head>
 <body>
-
-<div class="container">
+ 
+<!-- PIN SCREEN -->
+<div class="screen active" id="screenPin">
+  <div class="pin-wrap">
+    <div class="pin-logo">🅿️</div>
+    <div style="text-align:center">
+      <div class="pin-title" id="pinTitle">Inserisci PIN</div>
+      <div class="pin-subtitle" id="pinSubtitle" style="margin-top:6px">Accesso privato</div>
+    </div>
+    <div class="pin-dots">
+      <div class="pin-dot" id="d0"></div>
+      <div class="pin-dot" id="d1"></div>
+      <div class="pin-dot" id="d2"></div>
+      <div class="pin-dot" id="d3"></div>
+    </div>
+    <div class="pin-error-msg" id="pinError"></div>
+    <div class="pin-keypad">
+      <button class="pin-key" onclick="pinKey('1')">1</button>
+      <button class="pin-key" onclick="pinKey('2')">2</button>
+      <button class="pin-key" onclick="pinKey('3')">3</button>
+      <button class="pin-key" onclick="pinKey('4')">4</button>
+      <button class="pin-key" onclick="pinKey('5')">5</button>
+      <button class="pin-key" onclick="pinKey('6')">6</button>
+      <button class="pin-key" onclick="pinKey('7')">7</button>
+      <button class="pin-key" onclick="pinKey('8')">8</button>
+      <button class="pin-key" onclick="pinKey('9')">9</button>
+      <button class="pin-key empty"></button>
+      <button class="pin-key" onclick="pinKey('0')">0</button>
+      <button class="pin-key" onclick="pinDel()">⌫</button>
+    </div>
+  </div>
+</div>
+ 
+<!-- MAIN SCREEN -->
+<div class="screen" id="screenMain">
+ 
   <div class="header">
     <div class="logo">📍 Parcheggio</div>
     <div class="title">Noi <span>Park</span></div>
     <div class="subtitle">Salva e condividi il posto auto in un tap</div>
   </div>
-
-  <!-- Car selector -->
+ 
   <div class="car-selector">
     <label>Quale macchina stai parcheggiando?</label>
     <div class="cars">
-      <button class="car-btn active" data-car="0" onclick="selectCar(0)">
+      <button class="car-btn active" onclick="selectCar(0)">
         <span class="car-icon">🚗</span>
-        <span class="car-name" id="car0-name">Scenic</span>
-        <span class="car-plate" id="car0-plate">TARGA</span>
+        <span class="car-name" id="car0-name">Auto 1</span>
+        <span class="car-plate" id="car0-plate">—</span>
       </button>
-      <button class="car-btn" data-car="1" onclick="selectCar(1)">
+      <button class="car-btn" onclick="selectCar(1)">
         <span class="car-icon">🚙</span>
-        <span class="car-name" id="car1-name">Aveo</span>
-        <span class="car-plate" id="car1-plate">TARGA</span>
+        <span class="car-name" id="car1-name">Auto 2</span>
+        <span class="car-plate" id="car1-plate">—</span>
       </button>
     </div>
   </div>
-
-  <!-- Big button -->
+ 
   <button class="park-btn" id="parkBtn" onclick="saveParking()">
     <span class="btn-icon">📍</span>
     <span>Salva Parcheggio</span>
   </button>
-
-  <!-- Current status -->
+ 
   <div class="status-card" id="statusCard">
     <div class="status-header">
       <div class="status-dot"></div>
@@ -545,43 +256,44 @@
     </div>
     <div class="coords-row" id="coordsRow">—</div>
     <div class="action-row">
-      <a class="action-btn" id="mapsLink" href="#" target="_blank">
-        🗺️ Apri Maps
-      </a>
-      <a class="action-btn whatsapp" id="waLink" href="#" target="_blank">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Manda su WhatsApp
-      </a>
+      <a class="action-btn" id="mapsLink" href="#" target="_blank">🗺️ Apri Maps</a>
+      <button class="action-btn telegram" id="tgBtn" onclick="sendTelegram()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        Invia Telegram
+      </button>
     </div>
   </div>
-
-  <!-- History -->
+ 
   <div class="history">
-    <div class="history-title">Ultimi parcheggi</div>
+    <div class="history-header">
+      <div class="history-title">Ultimi parcheggi</div>
+      <button class="settings-link" onclick="openSettings()">⚙️ Impostazioni</button>
+    </div>
     <div class="history-list" id="historyList">
       <div class="empty-history">Nessun parcheggio salvato ancora 🅿️</div>
     </div>
   </div>
+ 
 </div>
-
-<!-- Loading -->
+ 
+<!-- LOADING -->
 <div class="loading" id="loading">
   <div class="spinner"></div>
-  <div class="loading-text">Rilevando posizione…</div>
+  <div class="loading-text" id="loadingText">Rilevando posizione…</div>
 </div>
-
-<!-- Toast -->
+ 
+<!-- TOAST -->
 <div class="toast" id="toast"></div>
-
-<!-- Setup modal -->
-<div class="modal-bg" id="setupModal">
+ 
+<!-- SETUP MODAL (first run) -->
+<div class="modal-bg hidden" id="setupModal">
   <div class="modal">
     <h2>👋 Benvenuti!</h2>
-    <p>Prima di tutto, configurate i vostri nomi, targhe e il numero WhatsApp del gruppo condiviso.</p>
-
+    <p>Configurate nomi, targhe, il gruppo Telegram e un PIN opzionale.</p>
+ 
     <div class="input-group">
       <label>Nome Auto 1</label>
-      <input type="text" id="in_car0_name" placeholder="Scenic" maxlength="20">
+      <input type="text" id="in_car0_name" placeholder="es. Scenic" maxlength="20">
     </div>
     <div class="input-group">
       <label>Targa Auto 1</label>
@@ -589,200 +301,334 @@
     </div>
     <div class="input-group">
       <label>Nome Auto 2</label>
-      <input type="text" id="in_car1_name" placeholder="Aveo" maxlength="20">
+      <input type="text" id="in_car1_name" placeholder="es. Aveo" maxlength="20">
     </div>
     <div class="input-group">
       <label>Targa Auto 2</label>
       <input type="text" id="in_car1_plate" placeholder="es. XY456ZW" maxlength="10">
     </div>
-
-    <div class="walink-note">
-      <strong>📱 WhatsApp:</strong> Il pulsante "Manda su WhatsApp" apre automaticamente una chat WhatsApp. Per inviarlo al gruppo condiviso, inserisci il numero del gruppo (o di Nicoletta) qui sotto — oppure lascia vuoto e lo mandi tu a mano ogni volta.
+ 
+    <hr class="divider">
+    <span class="section-label">✈️ Telegram</span>
+    <div class="tg-note">
+      Aggiungi <strong>@userinfobot</strong> al tuo gruppo Telegram, scrivi qualcosa e ti risponde con il <strong>Chat ID</strong> (numero che inizia con <strong>-</strong>).
     </div>
-
     <div class="input-group">
-      <label>Numero WhatsApp (con prefisso, es. +393331234567)</label>
-      <input type="text" id="in_wa_number" placeholder="+39..." maxlength="20">
+      <label>Chat ID gruppo Telegram</label>
+      <input type="text" id="in_tg_chat" placeholder="-1001234567890">
     </div>
-
-    <button class="modal-btn" onclick="saveSetup()">Iniziamo 🚀</button>
+    <div class="input-group">
+      <label>Token Bot Telegram</label>
+      <input type="text" id="in_tg_token" placeholder="123456:ABC-xyz..." autocomplete="off">
+    </div>
+ 
+    <hr class="divider">
+    <span class="section-label">🔐 PIN (opzionale)</span>
+    <div class="input-group">
+      <label>Scegli PIN 4 cifre — lascia vuoto per non usarlo</label>
+      <input type="password" id="in_pin" placeholder="••••" maxlength="4" inputmode="numeric">
+    </div>
+ 
+    <button class="modal-btn" onclick="saveSetup()">Salva e inizia 🚀</button>
   </div>
 </div>
-
+ 
+<!-- SETTINGS MODAL -->
+<div class="modal-bg hidden" id="settingsModal">
+  <div class="modal">
+    <h2>⚙️ Impostazioni</h2>
+    <p>Modifica nomi, targhe, Chat ID Telegram e PIN.</p>
+ 
+    <div class="input-group">
+      <label>Nome Auto 1</label>
+      <input type="text" id="s_car0_name" maxlength="20">
+    </div>
+    <div class="input-group">
+      <label>Targa Auto 1</label>
+      <input type="text" id="s_car0_plate" maxlength="10">
+    </div>
+    <div class="input-group">
+      <label>Nome Auto 2</label>
+      <input type="text" id="s_car1_name" maxlength="20">
+    </div>
+    <div class="input-group">
+      <label>Targa Auto 2</label>
+      <input type="text" id="s_car1_plate" maxlength="10">
+    </div>
+ 
+    <hr class="divider">
+    <span class="section-label">✈️ Telegram</span>
+    <div class="input-group">
+      <label>Chat ID gruppo Telegram</label>
+      <input type="text" id="s_tg_chat">
+    </div>
+    <div class="input-group">
+      <label>Token Bot Telegram (lascia vuoto per non cambiare)</label>
+      <input type="text" id="s_tg_token" placeholder="123456:ABC-xyz..." autocomplete="off">
+    </div>
+ 
+    <hr class="divider">
+    <span class="section-label">🔐 PIN</span>
+    <div class="input-group">
+      <label>Nuovo PIN (lascia vuoto per non cambiare)</label>
+      <input type="password" id="s_pin" placeholder="••••" maxlength="4" inputmode="numeric">
+    </div>
+ 
+    <button class="modal-btn" onclick="saveSettings()">Salva modifiche</button>
+    <button class="modal-btn secondary" onclick="closeSettings()" style="margin-top:10px">Annulla</button>
+  </div>
+</div>
+ 
 <script>
-  // ─── State ─────────────────────────────────────────────────────────────────
-  let config = JSON.parse(localStorage.getItem('noi_config') || 'null');
-  let history = JSON.parse(localStorage.getItem('noi_history') || '[]');
-  let selectedCar = 0;
-  let currentParking = null;
-
-  // ─── Init ──────────────────────────────────────────────────────────────────
-  function init() {
-    if (!config) {
-      document.getElementById('setupModal').classList.remove('hidden');
-    } else {
-      applyConfig();
-      renderHistory();
-    }
+ 
+ 
+let config      = JSON.parse(localStorage.getItem('noi_config') || 'null');
+let parkHistory = JSON.parse(localStorage.getItem('noi_history') || '[]');
+let selectedCar = 0;
+let currentParking = null;
+ 
+// ── PIN ──────────────────────────────────────────
+let pinBuffer = '';
+ 
+function initApp() {
+  if (!config) {
+    showScreen('screenMain');
+    document.getElementById('setupModal').classList.remove('hidden');
+    return;
   }
-
-  function applyConfig() {
-    document.getElementById('car0-name').textContent = config.cars[0].name;
-    document.getElementById('car0-plate').textContent = config.cars[0].plate;
-    document.getElementById('car1-name').textContent = config.cars[1].name;
-    document.getElementById('car1-plate').textContent = config.cars[1].plate;
-  }
-
-  function saveSetup() {
-    const c0n = document.getElementById('in_car0_name').value.trim() || 'Scenic';
-    const c0p = document.getElementById('in_car0_plate').value.trim().toUpperCase() || '—';
-    const c1n = document.getElementById('in_car1_name').value.trim() || 'Aveo';
-    const c1p = document.getElementById('in_car1_plate').value.trim().toUpperCase() || '—';
-    const wa  = document.getElementById('in_wa_number').value.trim().replace(/\s/g,'');
-
-    config = {
-      cars: [
-        { name: c0n, plate: c0p },
-        { name: c1n, plate: c1p }
-      ],
-      waNumber: wa
-    };
-
-    localStorage.setItem('noi_config', JSON.stringify(config));
-    document.getElementById('setupModal').classList.add('hidden');
+  if (!config.pin) {
+    showScreen('screenMain');
     applyConfig();
-    showToast('✅ Configurazione salvata!');
+    renderHistory();
+    return;
   }
-
-  // ─── Car selection ─────────────────────────────────────────────────────────
-  function selectCar(idx) {
-    selectedCar = idx;
-    document.querySelectorAll('.car-btn').forEach((b,i) => {
-      b.classList.toggle('active', i === idx);
+  showScreen('screenPin');
+}
+ 
+function pinKey(k) {
+  if (pinBuffer.length >= 4) return;
+  pinBuffer += k;
+  updateDots();
+  if (pinBuffer.length === 4) setTimeout(checkPin, 120);
+}
+ 
+function pinDel() {
+  pinBuffer = pinBuffer.slice(0, -1);
+  updateDots();
+  document.getElementById('pinError').textContent = '';
+  document.querySelectorAll('.pin-dot').forEach(d => d.classList.remove('error'));
+}
+ 
+function updateDots() {
+  for (let i = 0; i < 4; i++) {
+    const d = document.getElementById('d' + i);
+    d.classList.toggle('filled', i < pinBuffer.length);
+    d.classList.remove('error');
+  }
+}
+ 
+function checkPin() {
+  if (pinBuffer === config.pin) {
+    showScreen('screenMain');
+    applyConfig();
+    renderHistory();
+  } else {
+    document.querySelectorAll('.pin-dot').forEach(d => d.classList.add('error'));
+    document.getElementById('pinError').textContent = 'PIN errato, riprova';
+    setTimeout(() => {
+      pinBuffer = '';
+      updateDots();
+      document.getElementById('pinError').textContent = '';
+    }, 900);
+  }
+}
+ 
+// ── SETUP ────────────────────────────────────────
+function saveSetup() {
+  const c0n = document.getElementById('in_car0_name').value.trim() || 'Auto 1';
+  const c0p = document.getElementById('in_car0_plate').value.trim().toUpperCase() || '—';
+  const c1n = document.getElementById('in_car1_name').value.trim() || 'Auto 2';
+  const c1p = document.getElementById('in_car1_plate').value.trim().toUpperCase() || '—';
+  const tg    = document.getElementById("in_tg_chat").value.trim();
+  const token = document.getElementById("in_tg_token").value.trim();
+  const pin = document.getElementById('in_pin').value.trim();
+ 
+  if (pin && !/^\d{4}$/.test(pin)) { showToast('❌ Il PIN deve essere 4 cifre', true); return; }
+ 
+  config = { cars: [{ name: c0n, plate: c0p }, { name: c1n, plate: c1p }], tgChatId: tg, tgToken: token, pin: pin || '' };
+  localStorage.setItem('noi_config', JSON.stringify(config));
+  document.getElementById('setupModal').classList.add('hidden');
+  applyConfig();
+  renderHistory();
+  showToast('✅ Configurazione salvata!');
+}
+ 
+function openSettings() {
+  document.getElementById('s_car0_name').value  = config?.cars[0].name  || '';
+  document.getElementById('s_car0_plate').value = config?.cars[0].plate || '';
+  document.getElementById('s_car1_name').value  = config?.cars[1].name  || '';
+  document.getElementById('s_car1_plate').value = config?.cars[1].plate || '';
+  document.getElementById('s_tg_chat').value  = config?.tgChatId || '';
+  document.getElementById('s_tg_token').value = '';
+  document.getElementById('s_pin').value        = '';
+  document.getElementById('settingsModal').classList.remove('hidden');
+}
+ 
+function closeSettings() {
+  document.getElementById('settingsModal').classList.add('hidden');
+}
+ 
+function saveSettings() {
+  const c0n = document.getElementById('s_car0_name').value.trim() || 'Auto 1';
+  const c0p = document.getElementById('s_car0_plate').value.trim().toUpperCase() || '—';
+  const c1n = document.getElementById('s_car1_name').value.trim() || 'Auto 2';
+  const c1p = document.getElementById('s_car1_plate').value.trim().toUpperCase() || '—';
+  const tg    = document.getElementById("s_tg_chat").value.trim();
+  const token = document.getElementById("s_tg_token").value.trim();
+  const pin = document.getElementById('s_pin').value.trim();
+ 
+  if (pin && !/^\d{4}$/.test(pin)) { showToast('❌ Il PIN deve essere 4 cifre', true); return; }
+ 
+  config = { cars: [{ name: c0n, plate: c0p }, { name: c1n, plate: c1p }], tgChatId: tg, tgToken: token || config?.tgToken || '', pin: pin || config?.pin || '' };
+  localStorage.setItem('noi_config', JSON.stringify(config));
+  closeSettings();
+  applyConfig();
+  showToast('✅ Impostazioni salvate!');
+}
+ 
+function applyConfig() {
+  document.getElementById('car0-name').textContent  = config.cars[0].name;
+  document.getElementById('car0-plate').textContent = config.cars[0].plate;
+  document.getElementById('car1-name').textContent  = config.cars[1].name;
+  document.getElementById('car1-plate').textContent = config.cars[1].plate;
+}
+ 
+// ── CAR SELECTION ────────────────────────────────
+function selectCar(idx) {
+  selectedCar = idx;
+  document.querySelectorAll('.car-btn').forEach((b,i) => b.classList.toggle('active', i === idx));
+}
+ 
+// ── SAVE PARKING ─────────────────────────────────
+function saveParking() {
+  if (!navigator.geolocation) { showToast('❌ GPS non disponibile', true); return; }
+  setLoading(true, 'Rilevando posizione…');
+ 
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      setLoading(false);
+      const { latitude: lat, longitude: lng, accuracy } = pos.coords;
+      const car = config?.cars[selectedCar] || { name: selectedCar === 0 ? 'Auto 1' : 'Auto 2', plate: '—' };
+ 
+      currentParking = { lat, lng, accuracy, time: new Date().toISOString(), car: selectedCar, carName: car.name, plate: car.plate };
+      parkHistory.unshift(currentParking);
+      if (parkHistory.length > 10) parkHistory.pop();
+      localStorage.setItem('noi_history', JSON.stringify(parkHistory));
+ 
+      showStatusCard(currentParking);
+      renderHistory();
+      showToast('📍 Parcheggio salvato!');
+    },
+    err => {
+      setLoading(false);
+      let msg = '❌ Impossibile rilevare la posizione';
+      if (err.code === 1) msg = '❌ Permesso GPS negato';
+      if (err.code === 3) msg = '❌ GPS timeout — riprova all\'aperto';
+      showToast(msg, true);
+    },
+    { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+  );
+}
+ 
+function showStatusCard(p) {
+  document.getElementById('statusCard').classList.add('visible');
+  const { hh, mm, dd, mo } = fmt(p.time);
+  document.getElementById('statusTitle').textContent = `${p.carName} parcheggiata`;
+  document.getElementById('statusTime').textContent  = `${dd}/${mo} ${hh}:${mm}`;
+  document.getElementById('coordsRow').innerHTML =
+    `<span>LAT</span> ${p.lat.toFixed(6)}<br><span>LNG</span> ${p.lng.toFixed(6)}<br><span>ACC</span> ±${Math.round(p.accuracy)}m`;
+  document.getElementById('mapsLink').href = mapUrl(p);
+ 
+  const btn = document.getElementById('tgBtn');
+  btn.disabled = !config?.tgChatId || !config?.tgToken;
+}
+ 
+// ── TELEGRAM ─────────────────────────────────────
+async function sendTelegram() {
+  if (!config?.tgChatId || !config?.tgToken || !currentParking) return;
+  setLoading(true, 'Invio su Telegram…');
+ 
+  const { hh, mm, dd, mo } = fmt(currentParking.time);
+  const text = `🅿️ *${currentParking.carName}* parcheggiata!\n📅 ${dd}/${mo} alle ${hh}:${mm}\n📍 ${mapUrl(currentParking)}\n_precisione ±${Math.round(currentParking.accuracy)}m_`;
+ 
+  try {
+    const res  = await fetch(`https://api.telegram.org/bot${config.tgToken}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: config.tgChatId, text, parse_mode: 'Markdown' })
     });
+    const data = await res.json();
+    setLoading(false);
+    data.ok ? showToast('✈️ Inviato su Telegram!') : showToast('❌ ' + (data.description || 'Errore'), true);
+  } catch {
+    setLoading(false);
+    showToast('❌ Errore di rete', true);
   }
-
-  // ─── Save parking ──────────────────────────────────────────────────────────
-  function saveParking() {
-    if (!navigator.geolocation) {
-      showToast('❌ GPS non disponibile su questo dispositivo', true);
-      return;
-    }
-
-    setLoading(true);
-
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setLoading(false);
-        const { latitude: lat, longitude: lng, accuracy } = pos.coords;
-        const now = new Date();
-        const car = config ? config.cars[selectedCar] : { name: selectedCar === 0 ? 'Scenic' : 'Aveo', plate: '—' };
-
-        currentParking = { lat, lng, accuracy, time: now.toISOString(), car: selectedCar, carName: car.name, plate: car.plate };
-
-        // Add to history
-        history.unshift(currentParking);
-        if (history.length > 10) history.pop();
-        localStorage.setItem('noi_history', JSON.stringify(history));
-
-        showStatusCard(currentParking);
-        renderHistory();
-        showToast('📍 Parcheggio salvato!');
-      },
-      (err) => {
-        setLoading(false);
-        let msg = '❌ Impossibile rilevare la posizione';
-        if (err.code === 1) msg = '❌ Permesso GPS negato — abilitalo nelle impostazioni';
-        if (err.code === 3) msg = '❌ GPS timeout — riprova all\'aperto';
-        showToast(msg, true);
-      },
-      { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
-    );
-  }
-
-  function showStatusCard(p) {
-    const card = document.getElementById('statusCard');
-    card.classList.add('visible');
-
-    const time = new Date(p.time);
-    const hh = String(time.getHours()).padStart(2,'0');
-    const mm = String(time.getMinutes()).padStart(2,'0');
-    const dd = String(time.getDate()).padStart(2,'0');
-    const mo = String(time.getMonth()+1).padStart(2,'0');
-
-    document.getElementById('statusTitle').textContent = `${p.carName} parcheggiata`;
-    document.getElementById('statusTime').textContent = `${dd}/${mo} ${hh}:${mm}`;
-
-    document.getElementById('coordsRow').innerHTML =
-      `<span>LAT</span> ${p.lat.toFixed(6)}<br><span>LNG</span> ${p.lng.toFixed(6)}<br><span>ACC</span> ±${Math.round(p.accuracy)}m`;
-
-    const mapsUrl = `https://www.google.com/maps?q=${p.lat},${p.lng}`;
-    document.getElementById('mapsLink').href = mapsUrl;
-
-    const msg = buildMessage(p);
-    const waNumber = config?.waNumber || '';
-    const encoded = encodeURIComponent(msg);
-    const waUrl = waNumber
-      ? `https://wa.me/${waNumber.replace('+','')}?text=${encoded}`
-      : `https://wa.me/?text=${encoded}`;
-    document.getElementById('waLink').href = waUrl;
-  }
-
-  function buildMessage(p) {
-    const time = new Date(p.time);
-    const hh = String(time.getHours()).padStart(2,'0');
-    const mm = String(time.getMinutes()).padStart(2,'0');
-    const dd = String(time.getDate()).padStart(2,'0');
-    const mo = String(time.getMonth()+1).padStart(2,'0');
-    const mapsUrl = `https://www.google.com/maps?q=${p.lat},${p.lng}`;
-    return `🅿️ *${p.carName}* parcheggiata!\n📅 ${dd}/${mo} alle ${hh}:${mm}\n📍 ${mapsUrl}\n(precisione ±${Math.round(p.accuracy)}m)`;
-  }
-
-  // ─── History ───────────────────────────────────────────────────────────────
-  function renderHistory() {
-    const list = document.getElementById('historyList');
-    if (!history.length) {
-      list.innerHTML = '<div class="empty-history">Nessun parcheggio salvato ancora 🅿️</div>';
-      return;
-    }
+}
+ 
+// ── HISTORY ──────────────────────────────────────
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  if (!parkHistory.length) { list.innerHTML = '<div class="empty-history">Nessun parcheggio salvato ancora 🅿️</div>'; return; }
+  list.innerHTML = parkHistory.slice(0,5).map(p => {
+    const { hh, mm, dd, mo } = fmt(p.time);
     const icons = ['🚗','🚙'];
-    list.innerHTML = history.slice(0,5).map(p => {
-      const time = new Date(p.time);
-      const hh = String(time.getHours()).padStart(2,'0');
-      const mm = String(time.getMinutes()).padStart(2,'0');
-      const dd = String(time.getDate()).padStart(2,'0');
-      const mo = String(time.getMonth()+1).padStart(2,'0');
-      const mapsUrl = `https://www.google.com/maps?q=${p.lat},${p.lng}`;
-      return `
-        <div class="history-item">
-          <span class="history-car">${icons[p.car] || '🚗'}</span>
-          <div class="history-info">
-            <div class="h-name">${p.carName}</div>
-            <div class="h-time">${dd}/${mo} ${hh}:${mm} · ±${Math.round(p.accuracy)}m</div>
-          </div>
-          <a class="history-link" href="${mapsUrl}" target="_blank">Vedi 📍</a>
-        </div>`;
-    }).join('');
-  }
-
-  // ─── Utils ─────────────────────────────────────────────────────────────────
-  function setLoading(show) {
-    document.getElementById('loading').classList.toggle('show', show);
-    document.getElementById('parkBtn').disabled = show;
-  }
-
-  let toastTimer;
-  function showToast(msg, isError = false) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.toggle('error', isError);
-    t.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
-  }
-
-  // ─── Start ─────────────────────────────────────────────────────────────────
-  init();
+    return `<div class="history-item">
+      <span class="history-car">${icons[p.car]||'🚗'}</span>
+      <div class="history-info">
+        <div class="h-name">${p.carName}${p.plate && p.plate!=='—' ? ' · '+p.plate : ''}</div>
+        <div class="h-time">${dd}/${mo} ${hh}:${mm} · ±${Math.round(p.accuracy)}m</div>
+      </div>
+      <a class="history-link" href="${mapUrl(p)}" target="_blank">Vedi 📍</a>
+    </div>`;
+  }).join('');
+}
+ 
+// ── UTILS ────────────────────────────────────────
+function mapUrl(p) { return `https://www.google.com/maps?q=${p.lat},${p.lng}`; }
+ 
+function fmt(iso) {
+  const t = new Date(iso);
+  return {
+    hh: String(t.getHours()).padStart(2,'0'),
+    mm: String(t.getMinutes()).padStart(2,'0'),
+    dd: String(t.getDate()).padStart(2,'0'),
+    mo: String(t.getMonth()+1).padStart(2,'0')
+  };
+}
+ 
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+ 
+function setLoading(show, text = '') {
+  if (text) document.getElementById('loadingText').textContent = text;
+  document.getElementById('loading').classList.toggle('show', show);
+  document.getElementById('parkBtn').disabled = show;
+}
+ 
+let toastTimer;
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.toggle('error', isError);
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+ 
+initApp();
 </script>
 </body>
 </html>
