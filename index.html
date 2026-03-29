@@ -6,7 +6,7 @@
 <title>🅿️ Noi Parcheggio</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap');
- 
+
   :root {
     --bg: #0d0d0d;
     --card: #161616;
@@ -17,9 +17,9 @@
     --border: #2a2a2a;
     --tg: #29b6f6;
   }
- 
+
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
- 
+
   body {
     background: var(--bg);
     color: var(--text);
@@ -31,7 +31,7 @@
     padding: 24px 20px 40px;
     overflow-x: hidden;
   }
- 
+
   body::before {
     content: '';
     position: fixed;
@@ -43,10 +43,10 @@
     pointer-events: none;
     z-index: 0;
   }
- 
+
   .screen { display: none; width: 100%; max-width: 420px; }
   .screen.active { display: flex; flex-direction: column; align-items: center; gap: 24px; position: relative; z-index: 1; }
- 
+
   /* PIN */
   .pin-wrap {
     width: 100%;
@@ -82,14 +82,14 @@
   .pin-key:active { transform: scale(.92); background: #222; }
   .pin-key.empty { border: none; background: transparent; cursor: default; }
   .pin-error-msg { font-size: 13px; color: #ff5252; min-height: 18px; text-align: center; }
- 
+
   /* HEADER */
   .header { text-align: center; padding-top: 16px; width: 100%; }
   .logo { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--green); margin-bottom: 10px; opacity: 0.8; }
   .title { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; line-height: 1.1; letter-spacing: -1px; }
   .title span { color: var(--green); }
   .subtitle { margin-top: 8px; font-size: 14px; color: var(--muted); font-weight: 300; }
- 
+
   /* CAR SELECTOR */
   .car-selector { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; }
   .car-selector label { display: block; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
@@ -101,7 +101,7 @@
   .car-btn:hover { border-color: var(--green); }
   .car-btn.active { border-color: var(--green); background: var(--green-dim); color: var(--green); }
   .car-btn.active .car-plate { color: var(--green); opacity: 0.7; }
- 
+
   /* PARK BUTTON */
   .park-btn {
     width: 100%; position: relative; background: var(--green); color: #000; border: none;
@@ -119,7 +119,7 @@
     animation: pulse-ring 2.5s ease-out infinite; opacity: 0;
   }
   @keyframes pulse-ring { 0% { transform: scale(1); opacity: .5; } 100% { transform: scale(1.04); opacity: 0; } }
- 
+
   /* STATUS CARD */
   .status-card { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; display: none; }
   .status-card.visible { display: block; }
@@ -136,7 +136,7 @@
   .action-btn.telegram { border-color: var(--tg); color: var(--tg); }
   .action-btn.telegram:hover { background: #29b6f620; }
   .action-btn.telegram:disabled { opacity: .35; cursor: not-allowed; }
- 
+
   /* HISTORY */
   .history { width: 100%; }
   .history-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
@@ -151,19 +151,19 @@
   .history-info .h-time { font-size: 11px; color: var(--muted); margin-top: 2px; }
   .history-link { font-size: 11px; color: var(--green); text-decoration: none; border: 1px solid var(--green); border-radius: 8px; padding: 5px 10px; white-space: nowrap; }
   .empty-history { text-align: center; padding: 20px; color: var(--muted); font-size: 13px; }
- 
+
   /* LOADING */
   .loading { position: fixed; inset: 0; background: rgba(0,0,0,.7); backdrop-filter: blur(4px); display: none; flex-direction: column; align-items: center; justify-content: center; gap: 20px; z-index: 100; }
   .loading.show { display: flex; }
   .spinner { width: 56px; height: 56px; border-radius: 50%; border: 3px solid #333; border-top-color: var(--green); animation: spin .8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .loading-text { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; color: var(--green); }
- 
+
   /* TOAST */
   .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--green); color: #000; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; padding: 14px 24px; border-radius: 50px; transition: transform .35s cubic-bezier(.34,1.56,.64,1); z-index: 200; white-space: nowrap; }
   .toast.show { transform: translateX(-50%) translateY(0); }
   .toast.error { background: #ff5252; color: #fff; }
- 
+
   /* MODAL */
   .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.85); backdrop-filter: blur(6px); display: flex; align-items: flex-end; justify-content: center; z-index: 150; padding: 20px; }
   .modal-bg.hidden { display: none; }
@@ -185,7 +185,7 @@
 </style>
 </head>
 <body>
- 
+
 <!-- PIN SCREEN -->
 <div class="screen active" id="screenPin">
   <div class="pin-wrap">
@@ -217,16 +217,16 @@
     </div>
   </div>
 </div>
- 
+
 <!-- MAIN SCREEN -->
 <div class="screen" id="screenMain">
- 
+
   <div class="header">
     <div class="logo">📍 Parcheggio</div>
     <div class="title">Noi <span>Park</span></div>
     <div class="subtitle">Salva e condividi il posto auto in un tap</div>
   </div>
- 
+
   <div class="car-selector">
     <label>Quale macchina stai parcheggiando?</label>
     <div class="cars">
@@ -242,12 +242,23 @@
       </button>
     </div>
   </div>
- 
+
   <button class="park-btn" id="parkBtn" onclick="saveParking()">
     <span class="btn-icon">📍</span>
-    <span>Salva Parcheggio</span>
+    <span id="parkBtnText">Salva Parcheggio</span>
   </button>
- 
+
+  <div id="gpsBar" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px 18px;display:none;align-items:center;gap:12px;">
+    <div id="gpsDot" style="width:10px;height:10px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background .3s;"></div>
+    <div style="flex:1">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:5px;font-family:'Syne',sans-serif;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Precisione GPS</div>
+      <div style="background:#0a0a0a;border-radius:6px;height:6px;overflow:hidden;">
+        <div id="gpsProgress" style="height:100%;width:0%;border-radius:6px;transition:width .5s,background .5s;"></div>
+      </div>
+    </div>
+    <div id="gpsAccText" style="font-family:'Syne',sans-serif;font-weight:800;font-size:15px;min-width:64px;text-align:right;color:var(--muted);">—</div>
+  </div>
+
   <div class="status-card" id="statusCard">
     <div class="status-header">
       <div class="status-dot"></div>
@@ -263,7 +274,7 @@
       </button>
     </div>
   </div>
- 
+
   <div class="history">
     <div class="history-header">
       <div class="history-title">Ultimi parcheggi</div>
@@ -273,24 +284,24 @@
       <div class="empty-history">Nessun parcheggio salvato ancora 🅿️</div>
     </div>
   </div>
- 
+
 </div>
- 
+
 <!-- LOADING -->
 <div class="loading" id="loading">
   <div class="spinner"></div>
   <div class="loading-text" id="loadingText">Rilevando posizione…</div>
 </div>
- 
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
- 
+
 <!-- SETUP MODAL (first run) -->
 <div class="modal-bg hidden" id="setupModal">
   <div class="modal">
     <h2>👋 Benvenuti!</h2>
     <p>Configurate nomi, targhe, il gruppo Telegram e un PIN opzionale.</p>
- 
+
     <div class="input-group">
       <label>Nome Auto 1</label>
       <input type="text" id="in_car0_name" placeholder="es. Scenic" maxlength="20">
@@ -307,7 +318,7 @@
       <label>Targa Auto 2</label>
       <input type="text" id="in_car1_plate" placeholder="es. XY456ZW" maxlength="10">
     </div>
- 
+
     <hr class="divider">
     <span class="section-label">✈️ Telegram</span>
     <div class="tg-note">
@@ -321,24 +332,24 @@
       <label>Token Bot Telegram</label>
       <input type="text" id="in_tg_token" placeholder="123456:ABC-xyz..." autocomplete="off">
     </div>
- 
+
     <hr class="divider">
     <span class="section-label">🔐 PIN (opzionale)</span>
     <div class="input-group">
       <label>Scegli PIN 4 cifre — lascia vuoto per non usarlo</label>
       <input type="password" id="in_pin" placeholder="••••" maxlength="4" inputmode="numeric">
     </div>
- 
+
     <button class="modal-btn" onclick="saveSetup()">Salva e inizia 🚀</button>
   </div>
 </div>
- 
+
 <!-- SETTINGS MODAL -->
 <div class="modal-bg hidden" id="settingsModal">
   <div class="modal">
     <h2>⚙️ Impostazioni</h2>
     <p>Modifica nomi, targhe, Chat ID Telegram e PIN.</p>
- 
+
     <div class="input-group">
       <label>Nome Auto 1</label>
       <input type="text" id="s_car0_name" maxlength="20">
@@ -355,7 +366,7 @@
       <label>Targa Auto 2</label>
       <input type="text" id="s_car1_plate" maxlength="10">
     </div>
- 
+
     <hr class="divider">
     <span class="section-label">✈️ Telegram</span>
     <div class="input-group">
@@ -366,30 +377,30 @@
       <label>Token Bot Telegram (lascia vuoto per non cambiare)</label>
       <input type="text" id="s_tg_token" placeholder="123456:ABC-xyz..." autocomplete="off">
     </div>
- 
+
     <hr class="divider">
     <span class="section-label">🔐 PIN</span>
     <div class="input-group">
       <label>Nuovo PIN (lascia vuoto per non cambiare)</label>
       <input type="password" id="s_pin" placeholder="••••" maxlength="4" inputmode="numeric">
     </div>
- 
+
     <button class="modal-btn" onclick="saveSettings()">Salva modifiche</button>
     <button class="modal-btn secondary" onclick="closeSettings()" style="margin-top:10px">Annulla</button>
   </div>
 </div>
- 
+
 <script>
- 
- 
+
+
 let config      = JSON.parse(localStorage.getItem('noi_config') || 'null');
 let parkHistory = JSON.parse(localStorage.getItem('noi_history') || '[]');
 let selectedCar = 0;
 let currentParking = null;
- 
+
 // ── PIN ──────────────────────────────────────────
 let pinBuffer = '';
- 
+
 function initApp() {
   if (!config) {
     showScreen('screenMain');
@@ -404,21 +415,21 @@ function initApp() {
   }
   showScreen('screenPin');
 }
- 
+
 function pinKey(k) {
   if (pinBuffer.length >= 4) return;
   pinBuffer += k;
   updateDots();
   if (pinBuffer.length === 4) setTimeout(checkPin, 120);
 }
- 
+
 function pinDel() {
   pinBuffer = pinBuffer.slice(0, -1);
   updateDots();
   document.getElementById('pinError').textContent = '';
   document.querySelectorAll('.pin-dot').forEach(d => d.classList.remove('error'));
 }
- 
+
 function updateDots() {
   for (let i = 0; i < 4; i++) {
     const d = document.getElementById('d' + i);
@@ -426,7 +437,7 @@ function updateDots() {
     d.classList.remove('error');
   }
 }
- 
+
 function checkPin() {
   if (pinBuffer === config.pin) {
     showScreen('screenMain');
@@ -442,7 +453,7 @@ function checkPin() {
     }, 900);
   }
 }
- 
+
 // ── SETUP ────────────────────────────────────────
 function saveSetup() {
   const c0n = document.getElementById('in_car0_name').value.trim() || 'Auto 1';
@@ -452,9 +463,9 @@ function saveSetup() {
   const tg    = document.getElementById("in_tg_chat").value.trim();
   const token = document.getElementById("in_tg_token").value.trim();
   const pin = document.getElementById('in_pin').value.trim();
- 
+
   if (pin && !/^\d{4}$/.test(pin)) { showToast('❌ Il PIN deve essere 4 cifre', true); return; }
- 
+
   config = { cars: [{ name: c0n, plate: c0p }, { name: c1n, plate: c1p }], tgChatId: tg, tgToken: token, pin: pin || '' };
   localStorage.setItem('noi_config', JSON.stringify(config));
   document.getElementById('setupModal').classList.add('hidden');
@@ -462,7 +473,7 @@ function saveSetup() {
   renderHistory();
   showToast('✅ Configurazione salvata!');
 }
- 
+
 function openSettings() {
   document.getElementById('s_car0_name').value  = config?.cars[0].name  || '';
   document.getElementById('s_car0_plate').value = config?.cars[0].plate || '';
@@ -473,11 +484,11 @@ function openSettings() {
   document.getElementById('s_pin').value        = '';
   document.getElementById('settingsModal').classList.remove('hidden');
 }
- 
+
 function closeSettings() {
   document.getElementById('settingsModal').classList.add('hidden');
 }
- 
+
 function saveSettings() {
   const c0n = document.getElementById('s_car0_name').value.trim() || 'Auto 1';
   const c0p = document.getElementById('s_car0_plate').value.trim().toUpperCase() || '—';
@@ -486,81 +497,117 @@ function saveSettings() {
   const tg    = document.getElementById("s_tg_chat").value.trim();
   const token = document.getElementById("s_tg_token").value.trim();
   const pin = document.getElementById('s_pin').value.trim();
- 
+
   if (pin && !/^\d{4}$/.test(pin)) { showToast('❌ Il PIN deve essere 4 cifre', true); return; }
- 
+
   config = { cars: [{ name: c0n, plate: c0p }, { name: c1n, plate: c1p }], tgChatId: tg, tgToken: token || config?.tgToken || '', pin: pin || config?.pin || '' };
   localStorage.setItem('noi_config', JSON.stringify(config));
   closeSettings();
   applyConfig();
   showToast('✅ Impostazioni salvate!');
 }
- 
+
 function applyConfig() {
   document.getElementById('car0-name').textContent  = config.cars[0].name;
   document.getElementById('car0-plate').textContent = config.cars[0].plate;
   document.getElementById('car1-name').textContent  = config.cars[1].name;
   document.getElementById('car1-plate').textContent = config.cars[1].plate;
 }
- 
+
 // ── CAR SELECTION ────────────────────────────────
 function selectCar(idx) {
   selectedCar = idx;
   document.querySelectorAll('.car-btn').forEach((b,i) => b.classList.toggle('active', i === idx));
 }
- 
+
 // ── SAVE PARKING ─────────────────────────────────
+let gpsWatcher = null;
+let bestPos = null;
+
 function saveParking() {
   if (!navigator.geolocation) { showToast('❌ GPS non disponibile', true); return; }
-  setLoading(true, 'Rilevando posizione…');
- 
-  navigator.geolocation.getCurrentPosition(
+  if (gpsWatcher !== null) { confirmParking(); return; }
+
+  bestPos = null;
+  document.getElementById('parkBtn').style.background = '#ffd600';
+  document.getElementById('parkBtnText').textContent = 'Tap per confermare';
+  document.getElementById('gpsBar').style.display = 'flex';
+  updateGpsBar(null);
+
+  gpsWatcher = navigator.geolocation.watchPosition(
     pos => {
-      setLoading(false);
-      const { latitude: lat, longitude: lng, accuracy } = pos.coords;
-      const car = config?.cars[selectedCar] || { name: selectedCar === 0 ? 'Auto 1' : 'Auto 2', plate: '—' };
- 
-      currentParking = { lat, lng, accuracy, time: new Date().toISOString(), car: selectedCar, carName: car.name, plate: car.plate };
-      parkHistory.unshift(currentParking);
-      if (parkHistory.length > 10) parkHistory.pop();
-      localStorage.setItem('noi_history', JSON.stringify(parkHistory));
- 
-      showStatusCard(currentParking);
-      renderHistory();
-      showToast('📍 Parcheggio salvato!');
+      const acc = pos.coords.accuracy;
+      if (!bestPos || acc < bestPos.coords.accuracy) bestPos = pos;
+      updateGpsBar(acc);
     },
     err => {
-      setLoading(false);
+      stopGpsWatch();
       let msg = '❌ Impossibile rilevare la posizione';
       if (err.code === 1) msg = '❌ Permesso GPS negato';
-      if (err.code === 3) msg = '❌ GPS timeout — riprova all\'aperto';
       showToast(msg, true);
     },
-    { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+    { enableHighAccuracy: true, maximumAge: 0 }
   );
 }
- 
-function showStatusCard(p) {
-  document.getElementById('statusCard').classList.add('visible');
-  const { hh, mm, dd, mo } = fmt(p.time);
-  document.getElementById('statusTitle').textContent = `${p.carName} parcheggiata`;
-  document.getElementById('statusTime').textContent  = `${dd}/${mo} ${hh}:${mm}`;
-  document.getElementById('coordsRow').innerHTML =
-    `<span>LAT</span> ${p.lat.toFixed(6)}<br><span>LNG</span> ${p.lng.toFixed(6)}<br><span>ACC</span> ±${Math.round(p.accuracy)}m`;
-  document.getElementById('mapsLink').href = mapUrl(p);
- 
-  const btn = document.getElementById('tgBtn');
-  btn.disabled = !config?.tgChatId || !config?.tgToken;
+
+function confirmParking() {
+  if (!bestPos) { showToast('⏳ Aspetta il GPS…', true); return; }
+  stopGpsWatch();
+
+  const { latitude: lat, longitude: lng, accuracy } = bestPos.coords;
+  const car = config?.cars[selectedCar] || { name: selectedCar === 0 ? 'Auto 1' : 'Auto 2', plate: '—' };
+
+  currentParking = { lat, lng, accuracy, time: new Date().toISOString(), car: selectedCar, carName: car.name, plate: car.plate };
+  parkHistory.unshift(currentParking);
+  if (parkHistory.length > 10) parkHistory.pop();
+  localStorage.setItem('noi_history', JSON.stringify(parkHistory));
+
+  showStatusCard(currentParking);
+  renderHistory();
+  showToast(accuracy <= 50 ? '📍 Parcheggio salvato!' : '📍 Salvato (GPS approssimativo)');
 }
- 
+
+function stopGpsWatch() {
+  if (gpsWatcher !== null) { navigator.geolocation.clearWatch(gpsWatcher); gpsWatcher = null; }
+  bestPos = null;
+  document.getElementById('parkBtn').style.background = '';
+  document.getElementById('parkBtnText').textContent = 'Salva Parcheggio';
+  document.getElementById('gpsBar').style.display = 'none';
+}
+
+function updateGpsBar(acc) {
+  const dot = document.getElementById('gpsDot');
+  const bar = document.getElementById('gpsProgress');
+  const txt = document.getElementById('gpsAccText');
+
+  if (acc === null) {
+    dot.style.background = 'var(--muted)';
+    bar.style.width = '0%';
+    bar.style.background = 'var(--muted)';
+    txt.textContent = '…';
+    txt.style.color = 'var(--muted)';
+    return;
+  }
+
+  const quality = acc <= 10 ? 100 : acc <= 20 ? 85 : acc <= 50 ? 65 : acc <= 100 ? 40 : acc <= 500 ? 20 : 5;
+  const color   = acc <= 50 ? '#00e676' : acc <= 200 ? '#ffd600' : '#ff5252';
+
+  dot.style.background = color;
+  bar.style.width      = quality + '%';
+  bar.style.background = color;
+  txt.textContent      = acc < 1000 ? '±' + Math.round(acc) + 'm' : '±' + (acc/1000).toFixed(1) + 'km';
+  txt.style.color      = color;
+}
+
+
 // ── TELEGRAM ─────────────────────────────────────
 async function sendTelegram() {
   if (!config?.tgChatId || !config?.tgToken || !currentParking) return;
   setLoading(true, 'Invio su Telegram…');
- 
+
   const { hh, mm, dd, mo } = fmt(currentParking.time);
   const text = `🅿️ *${currentParking.carName}* parcheggiata!\n📅 ${dd}/${mo} alle ${hh}:${mm}\n📍 ${mapUrl(currentParking)}\n_precisione ±${Math.round(currentParking.accuracy)}m_`;
- 
+
   try {
     const res  = await fetch(`https://api.telegram.org/bot${config.tgToken}/sendMessage`, {
       method: 'POST',
@@ -575,7 +622,7 @@ async function sendTelegram() {
     showToast('❌ Errore di rete', true);
   }
 }
- 
+
 // ── HISTORY ──────────────────────────────────────
 function renderHistory() {
   const list = document.getElementById('historyList');
@@ -593,10 +640,10 @@ function renderHistory() {
     </div>`;
   }).join('');
 }
- 
+
 // ── UTILS ────────────────────────────────────────
 function mapUrl(p) { return `https://www.google.com/maps?q=${p.lat},${p.lng}`; }
- 
+
 function fmt(iso) {
   const t = new Date(iso);
   return {
@@ -606,18 +653,17 @@ function fmt(iso) {
     mo: String(t.getMonth()+1).padStart(2,'0')
   };
 }
- 
+
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
- 
+
 function setLoading(show, text = '') {
   if (text) document.getElementById('loadingText').textContent = text;
   document.getElementById('loading').classList.toggle('show', show);
-  document.getElementById('parkBtn').disabled = show;
 }
- 
+
 let toastTimer;
 function showToast(msg, isError = false) {
   const t = document.getElementById('toast');
@@ -627,7 +673,7 @@ function showToast(msg, isError = false) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
 }
- 
+
 initApp();
 </script>
 </body>
