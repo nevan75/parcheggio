@@ -552,9 +552,10 @@ function saveParking() {
 
 function confirmParking() {
   if (!bestPos) { showToast('⏳ Aspetta il GPS…', true); return; }
+  const savedPos = bestPos; // salva prima di stopGpsWatch che azzera bestPos
   stopGpsWatch();
 
-  const { latitude: lat, longitude: lng, accuracy } = bestPos.coords;
+  const { latitude: lat, longitude: lng, accuracy } = savedPos.coords;
   const car = config?.cars[selectedCar] || { name: selectedCar === 0 ? 'Auto 1' : 'Auto 2', plate: '—' };
 
   currentParking = { lat, lng, accuracy, time: new Date().toISOString(), car: selectedCar, carName: car.name, plate: car.plate };
@@ -606,13 +607,13 @@ async function sendTelegram() {
   setLoading(true, 'Invio su Telegram…');
 
   const { hh, mm, dd, mo } = fmt(currentParking.time);
-  const text = `🅿️ *${currentParking.carName}* parcheggiata!\n📅 ${dd}/${mo} alle ${hh}:${mm}\n📍 ${mapUrl(currentParking)}\n_precisione ±${Math.round(currentParking.accuracy)}m_`;
+  const text = `🅿️ ${currentParking.carName} parcheggiata!\n📅 ${dd}/${mo} alle ${hh}:${mm}\n📍 ${mapUrl(currentParking)}\n±${Math.round(currentParking.accuracy)}m`;
 
   try {
     const res  = await fetch(`https://api.telegram.org/bot${config.tgToken}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: config.tgChatId, text, parse_mode: 'Markdown' })
+      body: JSON.stringify({ chat_id: config.tgChatId, text })
     });
     const data = await res.json();
     setLoading(false);
