@@ -3,196 +3,140 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Parcheggio">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%230d0d0d'/%3E%3Ctext x='96' y='148' font-size='160' text-anchor='middle' font-family='Arial Black,sans-serif' font-weight='900' fill='%2300e676'%3EP%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%230d0d0d'/%3E%3Ctext x='96' y='148' font-size='160' text-anchor='middle' font-family='Arial Black,sans-serif' font-weight='900' fill='%2300e676'%3EP%3C/text%3E%3C/svg%3E">
 <title>🅿️ Noi Parcheggio</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap');
-
   :root {
-    --bg: #0d0d0d;
-    --card: #161616;
-    --green: #00e676;
-    --green-dim: #00e67622;
-    --text: #f0f0f0;
-    --muted: #666;
-    --border: #2a2a2a;
-    --tg: #29b6f6;
+    --bg: #0d0d0d; --card: #161616; --green: #00e676;
+    --green-dim: #00e67622; --text: #f0f0f0; --muted: #666;
+    --border: #2a2a2a; --tg: #29b6f6;
   }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 24px 20px 40px;
-    overflow-x: hidden;
-  }
-
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(0,230,118,.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,230,118,.04) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .screen { display: none; width: 100%; max-width: 420px; }
-  .screen.active { display: flex; flex-direction: column; align-items: center; gap: 24px; position: relative; z-index: 1; }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100dvh; display:flex; flex-direction:column; align-items:center; padding:24px 20px 40px; overflow-x:hidden; }
+  body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(rgba(0,230,118,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,230,118,.04) 1px,transparent 1px); background-size:40px 40px; pointer-events:none; z-index:0; }
+  .screen { display:none; width:100%; max-width:420px; }
+  .screen.active { display:flex; flex-direction:column; align-items:center; gap:24px; position:relative; z-index:1; }
 
   /* PIN */
-  .pin-wrap {
-    width: 100%;
-    min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 32px;
-    padding: 40px 20px;
-  }
-  .pin-logo { font-family: 'Syne', sans-serif; font-size: 48px; line-height: 1; }
-  .pin-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; text-align: center; }
-  .pin-subtitle { font-size: 13px; color: var(--muted); text-align: center; margin-top: -20px; }
-  .pin-dots { display: flex; gap: 16px; }
-  .pin-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--border); transition: all .15s ease; }
-  .pin-dot.filled { background: var(--green); border-color: var(--green); transform: scale(1.1); }
-  .pin-dot.error { background: #ff5252; border-color: #ff5252; }
-  .pin-keypad { display: grid; grid-template-columns: repeat(3, 72px); gap: 12px; }
-  .pin-key {
-    width: 72px; height: 72px;
-    border-radius: 50%;
-    border: 1.5px solid var(--border);
-    background: var(--card);
-    color: var(--text);
-    font-family: 'Syne', sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all .1s ease;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .pin-key:active { transform: scale(.92); background: #222; }
-  .pin-key.empty { border: none; background: transparent; cursor: default; }
-  .pin-error-msg { font-size: 13px; color: #ff5252; min-height: 18px; text-align: center; }
+  .pin-wrap { width:100%; min-height:100dvh; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:32px; padding:40px 20px; }
+  .pin-logo { font-size:48px; line-height:1; }
+  .pin-title { font-family:'Syne',sans-serif; font-size:22px; font-weight:800; text-align:center; }
+  .pin-subtitle { font-size:13px; color:var(--muted); text-align:center; margin-top:6px; }
+  .pin-dots { display:flex; gap:16px; }
+  .pin-dot { width:16px; height:16px; border-radius:50%; border:2px solid var(--border); transition:all .15s; }
+  .pin-dot.filled { background:var(--green); border-color:var(--green); transform:scale(1.1); }
+  .pin-dot.error { background:#ff5252; border-color:#ff5252; }
+  .pin-keypad { display:grid; grid-template-columns:repeat(3,72px); gap:12px; }
+  .pin-key { width:72px; height:72px; border-radius:50%; border:1.5px solid var(--border); background:var(--card); color:var(--text); font-family:'Syne',sans-serif; font-size:22px; font-weight:700; cursor:pointer; transition:all .1s; display:flex; align-items:center; justify-content:center; }
+  .pin-key:active { transform:scale(.92); background:#222; }
+  .pin-key.empty { border:none; background:transparent; cursor:default; }
+  .pin-error-msg { font-size:13px; color:#ff5252; min-height:18px; text-align:center; }
 
   /* HEADER */
-  .header { text-align: center; padding-top: 16px; width: 100%; }
-  .logo { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--green); margin-bottom: 10px; opacity: 0.8; }
-  .title { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; line-height: 1.1; letter-spacing: -1px; }
-  .title span { color: var(--green); }
-  .subtitle { margin-top: 8px; font-size: 14px; color: var(--muted); font-weight: 300; }
+  .header { text-align:center; padding-top:16px; width:100%; }
+  .logo { font-family:'Syne',sans-serif; font-size:13px; font-weight:700; letter-spacing:4px; text-transform:uppercase; color:var(--green); margin-bottom:10px; opacity:.8; }
+  .title { font-family:'Syne',sans-serif; font-size:36px; font-weight:800; line-height:1.1; letter-spacing:-1px; }
+  .title span { color:var(--green); }
+  .subtitle { margin-top:8px; font-size:14px; color:var(--muted); font-weight:300; }
 
-  /* CAR SELECTOR */
-  .car-selector { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; }
-  .car-selector label { display: block; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
-  .cars { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .car-btn { background: transparent; border: 1.5px solid var(--border); border-radius: 14px; padding: 14px 10px; color: var(--text); font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all .2s ease; display: flex; flex-direction: column; align-items: center; gap: 6px; }
-  .car-btn .car-icon { font-size: 24px; }
-  .car-btn .car-name { font-size: 13px; font-weight: 600; }
-  .car-btn .car-plate { font-size: 10px; color: var(--muted); letter-spacing: 1px; }
-  .car-btn:hover { border-color: var(--green); }
-  .car-btn.active { border-color: var(--green); background: var(--green-dim); color: var(--green); }
-  .car-btn.active .car-plate { color: var(--green); opacity: 0.7; }
+  /* CAR */
+  .car-selector { width:100%; background:var(--card); border:1px solid var(--border); border-radius:20px; padding:20px; }
+  .car-selector label { display:block; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
+  .cars { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .car-btn { background:transparent; border:1.5px solid var(--border); border-radius:14px; padding:14px 10px; color:var(--text); font-family:'DM Sans',sans-serif; cursor:pointer; transition:all .2s; display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .car-btn .car-icon { font-size:24px; }
+  .car-btn .car-name { font-size:13px; font-weight:600; }
+  .car-btn .car-plate { font-size:10px; color:var(--muted); letter-spacing:1px; }
+  .car-btn.active { border-color:var(--green); background:var(--green-dim); color:var(--green); }
+  .car-btn.active .car-plate { color:var(--green); opacity:.7; }
 
-  /* PARK BUTTON */
-  .park-btn {
-    width: 100%; position: relative; background: var(--green); color: #000; border: none;
-    border-radius: 20px; padding: 22px; font-family: 'Syne', sans-serif; font-size: 20px;
-    font-weight: 800; cursor: pointer; transition: all .2s ease;
-    display: flex; align-items: center; justify-content: center; gap: 12px; overflow: hidden;
-  }
-  .park-btn::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,.15) 0%, transparent 60%); }
-  .park-btn:active { transform: scale(.97); }
-  .park-btn:disabled { background: #333; color: #555; cursor: not-allowed; transform: none; }
-  .park-btn .btn-icon { font-size: 28px; }
-  .park-btn:not(:disabled)::before {
-    content: ''; position: absolute; inset: -2px; border-radius: 22px;
-    background: transparent; border: 2px solid var(--green);
-    animation: pulse-ring 2.5s ease-out infinite; opacity: 0;
-  }
-  @keyframes pulse-ring { 0% { transform: scale(1); opacity: .5; } 100% { transform: scale(1.04); opacity: 0; } }
+  /* PARK BTN */
+  .park-btn { width:100%; position:relative; background:var(--green); color:#000; border:none; border-radius:20px; padding:22px; font-family:'Syne',sans-serif; font-size:20px; font-weight:800; cursor:pointer; transition:background .3s; display:flex; align-items:center; justify-content:center; gap:12px; overflow:hidden; }
+  .park-btn::after { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,.15) 0%,transparent 60%); }
+  .park-btn:active { opacity:.9; }
+  .park-btn .btn-icon { font-size:28px; }
+  .park-btn:not(.gps-active)::before { content:''; position:absolute; inset:-2px; border-radius:22px; background:transparent; border:2px solid var(--green); animation:pulse-ring 2.5s ease-out infinite; opacity:0; }
+  @keyframes pulse-ring { 0%{transform:scale(1);opacity:.5} 100%{transform:scale(1.04);opacity:0} }
 
-  /* STATUS CARD */
-  .status-card { width: 100%; background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; display: none; }
-  .status-card.visible { display: block; }
-  .status-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
-  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; animation: blink 1.5s ease-in-out infinite; }
-  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
-  .status-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; }
-  .status-time { margin-left: auto; font-size: 11px; color: var(--muted); }
-  .coords-row { background: #0a0a0a; border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; font-size: 13px; color: var(--muted); letter-spacing: .5px; line-height: 1.8; }
-  .coords-row span { color: var(--green); }
-  .action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .action-btn { background: transparent; border: 1.5px solid var(--border); border-radius: 12px; padding: 13px 10px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
-  .action-btn:hover { border-color: var(--green); color: var(--green); }
-  .action-btn.telegram { border-color: var(--tg); color: var(--tg); }
-  .action-btn.telegram:hover { background: #29b6f620; }
-  .action-btn.telegram:disabled { opacity: .35; cursor: not-allowed; }
+  /* GPS BAR */
+  .gps-bar { width:100%; background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px 18px; display:none; align-items:center; gap:12px; }
+  .gps-bar.show { display:flex; }
+
+  /* STATUS */
+  .status-card { width:100%; background:var(--card); border:1px solid var(--border); border-radius:20px; padding:20px; display:none; }
+  .status-card.visible { display:block; }
+  .status-header { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+  .status-dot { width:8px; height:8px; border-radius:50%; background:var(--green); flex-shrink:0; animation:blink 1.5s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+  .status-title { font-family:'Syne',sans-serif; font-weight:700; font-size:15px; }
+  .status-time { margin-left:auto; font-size:11px; color:var(--muted); }
+  .coords-row { background:#0a0a0a; border-radius:12px; padding:14px 16px; margin-bottom:14px; font-size:13px; color:var(--muted); letter-spacing:.5px; line-height:1.8; }
+  .coords-row span { color:var(--green); }
+  .action-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .action-btn { background:transparent; border:1.5px solid var(--border); border-radius:12px; padding:13px 10px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center; gap:8px; text-decoration:none; }
+  .action-btn.telegram { border-color:var(--tg); color:var(--tg); }
+  .action-btn.telegram:disabled { opacity:.35; cursor:not-allowed; }
 
   /* HISTORY */
-  .history { width: 100%; }
-  .history-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-  .history-title { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
-  .settings-link { font-size: 12px; color: var(--muted); cursor: pointer; background: none; border: none; font-family: 'DM Sans', sans-serif; }
-  .history-list { display: flex; flex-direction: column; gap: 8px; }
-  .history-item { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; animation: slide-in .3s ease; }
-  @keyframes slide-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
-  .history-car { font-size: 22px; }
-  .history-info { flex: 1; }
-  .history-info .h-name { font-size: 13px; font-weight: 600; }
-  .history-info .h-time { font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .history-link { font-size: 11px; color: var(--green); text-decoration: none; border: 1px solid var(--green); border-radius: 8px; padding: 5px 10px; white-space: nowrap; }
-  .empty-history { text-align: center; padding: 20px; color: var(--muted); font-size: 13px; }
+  .history { width:100%; }
+  .history-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .history-title { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); }
+  .settings-link { font-size:12px; color:var(--muted); cursor:pointer; background:none; border:none; font-family:'DM Sans',sans-serif; }
+  .history-list { display:flex; flex-direction:column; gap:8px; }
+  .history-item { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px 16px; display:flex; align-items:center; gap:12px; animation:slide-in .3s ease; }
+  @keyframes slide-in { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+  .history-car { font-size:22px; }
+  .history-info { flex:1; }
+  .h-name { font-size:13px; font-weight:600; }
+  .h-time { font-size:11px; color:var(--muted); margin-top:2px; }
+  .history-link { font-size:11px; color:var(--green); text-decoration:none; border:1px solid var(--green); border-radius:8px; padding:5px 10px; white-space:nowrap; }
+  .empty-history { text-align:center; padding:20px; color:var(--muted); font-size:13px; }
 
   /* LOADING */
-  .loading { position: fixed; inset: 0; background: rgba(0,0,0,.7); backdrop-filter: blur(4px); display: none; flex-direction: column; align-items: center; justify-content: center; gap: 20px; z-index: 100; }
-  .loading.show { display: flex; }
-  .spinner { width: 56px; height: 56px; border-radius: 50%; border: 3px solid #333; border-top-color: var(--green); animation: spin .8s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-text { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; color: var(--green); }
+  .loading { position:fixed; inset:0; background:rgba(0,0,0,.7); backdrop-filter:blur(4px); display:none; flex-direction:column; align-items:center; justify-content:center; gap:20px; z-index:100; }
+  .loading.show { display:flex; }
+  .spinner { width:56px; height:56px; border-radius:50%; border:3px solid #333; border-top-color:var(--green); animation:spin .8s linear infinite; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .loading-text { font-family:'Syne',sans-serif; font-weight:700; font-size:16px; color:var(--green); }
 
   /* TOAST */
-  .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--green); color: #000; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; padding: 14px 24px; border-radius: 50px; transition: transform .35s cubic-bezier(.34,1.56,.64,1); z-index: 200; white-space: nowrap; }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-  .toast.error { background: #ff5252; color: #fff; }
+  .toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--green); color:#000; font-family:'Syne',sans-serif; font-weight:700; font-size:14px; padding:14px 24px; border-radius:50px; transition:transform .35s cubic-bezier(.34,1.56,.64,1); z-index:200; white-space:nowrap; }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+  .toast.error { background:#ff5252; color:#fff; }
 
   /* MODAL */
-  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.85); backdrop-filter: blur(6px); display: flex; align-items: flex-end; justify-content: center; z-index: 150; padding: 20px; }
-  .modal-bg.hidden { display: none; }
-  .modal { background: #1a1a1a; border: 1px solid var(--border); border-radius: 24px; padding: 28px 24px 32px; width: 100%; max-width: 420px; max-height: 90dvh; overflow-y: auto; }
-  .modal h2 { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; margin-bottom: 6px; }
-  .modal p { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
-  .input-group { margin-bottom: 14px; }
-  .input-group label { display: block; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-  .input-group input { width: 100%; background: #0d0d0d; border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 16px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; outline: none; transition: border-color .2s; }
-  .input-group input:focus { border-color: var(--green); }
-  .input-group input::placeholder { color: #444; }
-  .modal-btn { width: 100%; background: var(--green); color: #000; border: none; border-radius: 14px; padding: 18px; font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 800; cursor: pointer; margin-top: 8px; }
-  .modal-btn:active { opacity: .85; }
-  .modal-btn.secondary { background: #222; color: var(--muted); }
-  .section-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--tg); margin: 20px 0 12px; display: block; }
-  .tg-note { background: #29b6f610; border: 1px solid #29b6f630; border-radius: 12px; padding: 12px 14px; font-size: 12px; color: #aaa; line-height: 1.6; margin-bottom: 14px; }
-  .tg-note strong { color: var(--tg); }
-  .divider { width: 100%; border: none; border-top: 1px solid var(--border); margin: 8px 0 20px; }
+  .modal-bg { position:fixed; inset:0; background:rgba(0,0,0,.85); backdrop-filter:blur(6px); display:flex; align-items:flex-end; justify-content:center; z-index:150; padding:20px; }
+  .modal-bg.hidden { display:none; }
+  .modal { background:#1a1a1a; border:1px solid var(--border); border-radius:24px; padding:28px 24px 32px; width:100%; max-width:420px; max-height:90dvh; overflow-y:auto; }
+  .modal h2 { font-family:'Syne',sans-serif; font-size:22px; font-weight:800; margin-bottom:6px; }
+  .modal p { font-size:13px; color:var(--muted); margin-bottom:20px; line-height:1.5; }
+  .input-group { margin-bottom:14px; }
+  .input-group label { display:block; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+  .input-group input { width:100%; background:#0d0d0d; border:1.5px solid var(--border); border-radius:12px; padding:14px 16px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:15px; outline:none; transition:border-color .2s; }
+  .input-group input:focus { border-color:var(--green); }
+  .input-group input::placeholder { color:#444; }
+  .modal-btn { width:100%; background:var(--green); color:#000; border:none; border-radius:14px; padding:18px; font-family:'Syne',sans-serif; font-size:17px; font-weight:800; cursor:pointer; margin-top:8px; }
+  .modal-btn.secondary { background:#222; color:var(--muted); }
+  .section-label { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--tg); margin:20px 0 12px; display:block; }
+  .tg-note { background:#29b6f610; border:1px solid #29b6f630; border-radius:12px; padding:12px 14px; font-size:12px; color:#aaa; line-height:1.6; margin-bottom:14px; }
+  .tg-note strong { color:var(--tg); }
+  .divider { width:100%; border:none; border-top:1px solid var(--border); margin:8px 0 20px; }
+  .version { text-align:center; font-size:11px; color:#333; padding:8px 0; font-family:'Syne',sans-serif; letter-spacing:2px; }
 </style>
 </head>
 <body>
 
-<!-- PIN SCREEN -->
+<!-- PIN -->
 <div class="screen active" id="screenPin">
   <div class="pin-wrap">
     <div class="pin-logo">🅿️</div>
     <div style="text-align:center">
       <div class="pin-title" id="pinTitle">Inserisci PIN</div>
-      <div class="pin-subtitle" id="pinSubtitle" style="margin-top:6px">Accesso privato</div>
+      <div class="pin-subtitle" id="pinSubtitle">Accesso privato</div>
     </div>
     <div class="pin-dots">
       <div class="pin-dot" id="d0"></div>
@@ -218,7 +162,7 @@
   </div>
 </div>
 
-<!-- MAIN SCREEN -->
+<!-- MAIN -->
 <div class="screen" id="screenMain">
 
   <div class="header">
@@ -248,7 +192,7 @@
     <span id="parkBtnText">Salva Parcheggio</span>
   </button>
 
-  <div id="gpsBar" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px 18px;display:none;align-items:center;gap:12px;">
+  <div class="gps-bar" id="gpsBar">
     <div id="gpsDot" style="width:10px;height:10px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background .3s;"></div>
     <div style="flex:1">
       <div style="font-size:11px;color:var(--muted);margin-bottom:5px;font-family:'Syne',sans-serif;font-weight:700;letter-spacing:1px;text-transform:uppercase;">Precisione GPS</div>
@@ -285,62 +229,36 @@
     </div>
   </div>
 
-  <div style="text-align:center;font-size:11px;color:#333;padding:8px 0;font-family:'Syne',sans-serif;letter-spacing:2px;">v1.4</div>
+  <div class="version">v1.5</div>
+
 </div>
 
 <!-- LOADING -->
 <div class="loading" id="loading">
   <div class="spinner"></div>
-  <div class="loading-text" id="loadingText">Rilevando posizione…</div>
+  <div class="loading-text" id="loadingText">Caricamento…</div>
 </div>
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- SETUP MODAL (first run) -->
+<!-- SETUP MODAL -->
 <div class="modal-bg hidden" id="setupModal">
   <div class="modal">
     <h2>👋 Benvenuti!</h2>
     <p>Configurate nomi, targhe, il gruppo Telegram e un PIN opzionale.</p>
-
-    <div class="input-group">
-      <label>Nome Auto 1</label>
-      <input type="text" id="in_car0_name" placeholder="es. Scenic" maxlength="20">
-    </div>
-    <div class="input-group">
-      <label>Targa Auto 1</label>
-      <input type="text" id="in_car0_plate" placeholder="es. AB123CD" maxlength="10">
-    </div>
-    <div class="input-group">
-      <label>Nome Auto 2</label>
-      <input type="text" id="in_car1_name" placeholder="es. Aveo" maxlength="20">
-    </div>
-    <div class="input-group">
-      <label>Targa Auto 2</label>
-      <input type="text" id="in_car1_plate" placeholder="es. XY456ZW" maxlength="10">
-    </div>
-
+    <div class="input-group"><label>Nome Auto 1</label><input type="text" id="in_car0_name" placeholder="es. Scenic" maxlength="20"></div>
+    <div class="input-group"><label>Targa Auto 1</label><input type="text" id="in_car0_plate" placeholder="es. AB123CD" maxlength="10"></div>
+    <div class="input-group"><label>Nome Auto 2</label><input type="text" id="in_car1_name" placeholder="es. Aveo" maxlength="20"></div>
+    <div class="input-group"><label>Targa Auto 2</label><input type="text" id="in_car1_plate" placeholder="es. XY456ZW" maxlength="10"></div>
     <hr class="divider">
     <span class="section-label">✈️ Telegram</span>
-    <div class="tg-note">
-      Aggiungi <strong>@userinfobot</strong> al tuo gruppo Telegram, scrivi qualcosa e ti risponde con il <strong>Chat ID</strong> (numero che inizia con <strong>-</strong>).
-    </div>
-    <div class="input-group">
-      <label>Chat ID gruppo Telegram</label>
-      <input type="text" id="in_tg_chat" placeholder="-1001234567890">
-    </div>
-    <div class="input-group">
-      <label>Token Bot Telegram</label>
-      <input type="text" id="in_tg_token" placeholder="123456:ABC-xyz..." autocomplete="off">
-    </div>
-
+    <div class="tg-note">Aggiungi <strong>@userinfobot</strong> al gruppo, scrivi qualcosa — ti risponde con il <strong>Chat ID</strong> (numero con il - davanti).</div>
+    <div class="input-group"><label>Chat ID gruppo Telegram</label><input type="text" id="in_tg_chat" placeholder="-1001234567890"></div>
+    <div class="input-group"><label>Token Bot Telegram</label><input type="text" id="in_tg_token" placeholder="123456:ABC-xyz..." autocomplete="off"></div>
     <hr class="divider">
     <span class="section-label">🔐 PIN (opzionale)</span>
-    <div class="input-group">
-      <label>Scegli PIN 4 cifre — lascia vuoto per non usarlo</label>
-      <input type="password" id="in_pin" placeholder="••••" maxlength="4" inputmode="numeric">
-    </div>
-
+    <div class="input-group"><label>PIN 4 cifre — lascia vuoto per non usarlo</label><input type="password" id="in_pin" placeholder="••••" maxlength="4" inputmode="numeric"></div>
     <button class="modal-btn" onclick="saveSetup()">Salva e inizia 🚀</button>
   </div>
 </div>
@@ -349,51 +267,25 @@
 <div class="modal-bg hidden" id="settingsModal">
   <div class="modal">
     <h2>⚙️ Impostazioni</h2>
-    <p>Modifica nomi, targhe, Chat ID Telegram e PIN.</p>
-
-    <div class="input-group">
-      <label>Nome Auto 1</label>
-      <input type="text" id="s_car0_name" maxlength="20">
-    </div>
-    <div class="input-group">
-      <label>Targa Auto 1</label>
-      <input type="text" id="s_car0_plate" maxlength="10">
-    </div>
-    <div class="input-group">
-      <label>Nome Auto 2</label>
-      <input type="text" id="s_car1_name" maxlength="20">
-    </div>
-    <div class="input-group">
-      <label>Targa Auto 2</label>
-      <input type="text" id="s_car1_plate" maxlength="10">
-    </div>
-
+    <p>Modifica nomi, targhe, Telegram e PIN.</p>
+    <div class="input-group"><label>Nome Auto 1</label><input type="text" id="s_car0_name" maxlength="20"></div>
+    <div class="input-group"><label>Targa Auto 1</label><input type="text" id="s_car0_plate" maxlength="10"></div>
+    <div class="input-group"><label>Nome Auto 2</label><input type="text" id="s_car1_name" maxlength="20"></div>
+    <div class="input-group"><label>Targa Auto 2</label><input type="text" id="s_car1_plate" maxlength="10"></div>
     <hr class="divider">
     <span class="section-label">✈️ Telegram</span>
-    <div class="input-group">
-      <label>Chat ID gruppo Telegram</label>
-      <input type="text" id="s_tg_chat">
-    </div>
-    <div class="input-group">
-      <label>Token Bot Telegram (lascia vuoto per non cambiare)</label>
-      <input type="text" id="s_tg_token" placeholder="123456:ABC-xyz..." autocomplete="off">
-    </div>
-
+    <div class="input-group"><label>Chat ID gruppo Telegram</label><input type="text" id="s_tg_chat"></div>
+    <div class="input-group"><label>Token Bot (lascia vuoto per non cambiare)</label><input type="text" id="s_tg_token" autocomplete="off"></div>
     <hr class="divider">
     <span class="section-label">🔐 PIN</span>
-    <div class="input-group">
-      <label>Nuovo PIN (lascia vuoto per non cambiare)</label>
-      <input type="password" id="s_pin" placeholder="••••" maxlength="4" inputmode="numeric">
-    </div>
-
+    <div class="input-group"><label>Nuovo PIN (lascia vuoto per non cambiare)</label><input type="password" id="s_pin" placeholder="••••" maxlength="4" inputmode="numeric"></div>
     <button class="modal-btn" onclick="saveSettings()">Salva modifiche</button>
     <button class="modal-btn secondary" onclick="closeSettings()" style="margin-top:10px">Annulla</button>
   </div>
 </div>
 
 <script>
-
-
+// ── STATE ─────────────────────────────────────────
 let config      = JSON.parse(localStorage.getItem('noi_config') || 'null');
 let parkHistory = JSON.parse(localStorage.getItem('noi_history') || '[]');
 let selectedCar = 0;
@@ -447,27 +339,21 @@ function checkPin() {
   } else {
     document.querySelectorAll('.pin-dot').forEach(d => d.classList.add('error'));
     document.getElementById('pinError').textContent = 'PIN errato, riprova';
-    setTimeout(() => {
-      pinBuffer = '';
-      updateDots();
-      document.getElementById('pinError').textContent = '';
-    }, 900);
+    setTimeout(() => { pinBuffer = ''; updateDots(); document.getElementById('pinError').textContent = ''; }, 900);
   }
 }
 
 // ── SETUP ────────────────────────────────────────
 function saveSetup() {
-  const c0n = document.getElementById('in_car0_name').value.trim() || 'Auto 1';
-  const c0p = document.getElementById('in_car0_plate').value.trim().toUpperCase() || '—';
-  const c1n = document.getElementById('in_car1_name').value.trim() || 'Auto 2';
-  const c1p = document.getElementById('in_car1_plate').value.trim().toUpperCase() || '—';
-  const tg    = document.getElementById("in_tg_chat").value.trim();
-  const token = document.getElementById("in_tg_token").value.trim();
-  const pin = document.getElementById('in_pin').value.trim();
-
+  const c0n  = document.getElementById('in_car0_name').value.trim()  || 'Auto 1';
+  const c0p  = document.getElementById('in_car0_plate').value.trim().toUpperCase() || '—';
+  const c1n  = document.getElementById('in_car1_name').value.trim()  || 'Auto 2';
+  const c1p  = document.getElementById('in_car1_plate').value.trim().toUpperCase() || '—';
+  const tg   = document.getElementById('in_tg_chat').value.trim();
+  const tok  = document.getElementById('in_tg_token').value.trim();
+  const pin  = document.getElementById('in_pin').value.trim();
   if (pin && !/^\d{4}$/.test(pin)) { showToast('❌ Il PIN deve essere 4 cifre', true); return; }
-
-  config = { cars: [{ name: c0n, plate: c0p }, { name: c1n, plate: c1p }], tgChatId: tg, tgToken: token, pin: pin || '' };
+  config = { cars:[{name:c0n,plate:c0p},{name:c1n,plate:c1p}], tgChatId:tg, tgToken:tok, pin:pin||'' };
   localStorage.setItem('noi_config', JSON.stringify(config));
   document.getElementById('setupModal').classList.add('hidden');
   applyConfig();
@@ -480,8 +366,8 @@ function openSettings() {
   document.getElementById('s_car0_plate').value = config?.cars[0].plate || '';
   document.getElementById('s_car1_name').value  = config?.cars[1].name  || '';
   document.getElementById('s_car1_plate').value = config?.cars[1].plate || '';
-  document.getElementById('s_tg_chat').value  = config?.tgChatId || '';
-  document.getElementById('s_tg_token').value = '';
+  document.getElementById('s_tg_chat').value    = config?.tgChatId      || '';
+  document.getElementById('s_tg_token').value   = '';
   document.getElementById('s_pin').value        = '';
   document.getElementById('settingsModal').classList.remove('hidden');
 }
@@ -491,17 +377,15 @@ function closeSettings() {
 }
 
 function saveSettings() {
-  const c0n = document.getElementById('s_car0_name').value.trim() || 'Auto 1';
-  const c0p = document.getElementById('s_car0_plate').value.trim().toUpperCase() || '—';
-  const c1n = document.getElementById('s_car1_name').value.trim() || 'Auto 2';
-  const c1p = document.getElementById('s_car1_plate').value.trim().toUpperCase() || '—';
-  const tg    = document.getElementById("s_tg_chat").value.trim();
-  const token = document.getElementById("s_tg_token").value.trim();
-  const pin = document.getElementById('s_pin').value.trim();
-
+  const c0n  = document.getElementById('s_car0_name').value.trim()  || 'Auto 1';
+  const c0p  = document.getElementById('s_car0_plate').value.trim().toUpperCase() || '—';
+  const c1n  = document.getElementById('s_car1_name').value.trim()  || 'Auto 2';
+  const c1p  = document.getElementById('s_car1_plate').value.trim().toUpperCase() || '—';
+  const tg   = document.getElementById('s_tg_chat').value.trim();
+  const tok  = document.getElementById('s_tg_token').value.trim();
+  const pin  = document.getElementById('s_pin').value.trim();
   if (pin && !/^\d{4}$/.test(pin)) { showToast('❌ Il PIN deve essere 4 cifre', true); return; }
-
-  config = { cars: [{ name: c0n, plate: c0p }, { name: c1n, plate: c1p }], tgChatId: tg, tgToken: token || config?.tgToken || '', pin: pin || config?.pin || '' };
+  config = { cars:[{name:c0n,plate:c0p},{name:c1n,plate:c1p}], tgChatId:tg, tgToken:tok||config?.tgToken||'', pin:pin||config?.pin||'' };
   localStorage.setItem('noi_config', JSON.stringify(config));
   closeSettings();
   applyConfig();
@@ -523,77 +407,88 @@ function selectCar(idx) {
 
 // ── SAVE PARKING ─────────────────────────────────
 let gpsWatcher = null;
-let bestPos = null;
+let bestPos    = null;
+let gpsActive  = false;
 
 function saveParking() {
   if (!navigator.geolocation) { showToast('❌ GPS non disponibile', true); return; }
-  if (gpsWatcher !== null) { confirmParking(); return; }
 
-  bestPos = null;
-  document.getElementById('parkBtn').style.background = '#ffd600';
+  if (gpsActive) {
+    // Secondo tap: salva
+    if (!bestPos) { showToast('⏳ Aspetta il GPS…', true); return; }
+
+    // Ferma watcher
+    navigator.geolocation.clearWatch(gpsWatcher);
+    gpsWatcher = null;
+    gpsActive  = false;
+
+    // Leggi posizione prima di azzerare
+    const lat      = bestPos.coords.latitude;
+    const lng      = bestPos.coords.longitude;
+    const accuracy = bestPos.coords.accuracy;
+    bestPos = null;
+
+    // Reset UI bottone
+    const btn = document.getElementById('parkBtn');
+    btn.style.background = '';
+    btn.classList.remove('gps-active');
+    document.getElementById('parkBtnText').textContent = 'Salva Parcheggio';
+    document.getElementById('gpsBar').classList.remove('show');
+
+    // Salva
+    const car = config?.cars[selectedCar] || { name: selectedCar === 0 ? 'Auto 1' : 'Auto 2', plate: '—' };
+    currentParking = { lat, lng, accuracy, time: new Date().toISOString(), car: selectedCar, carName: car.name, plate: car.plate };
+    parkHistory.unshift(currentParking);
+    if (parkHistory.length > 10) parkHistory.pop();
+    localStorage.setItem('noi_history', JSON.stringify(parkHistory));
+
+    showStatusCard(currentParking);
+    renderHistory();
+    showToast(accuracy <= 50 ? '📍 Parcheggio salvato!' : '📍 Salvato (GPS approssimativo)');
+    return;
+  }
+
+  // Primo tap: avvia GPS
+  gpsActive = true;
+  bestPos   = null;
+  const btn = document.getElementById('parkBtn');
+  btn.style.background = '#ffd600';
+  btn.classList.add('gps-active');
   document.getElementById('parkBtnText').textContent = 'Tap per confermare';
-  document.getElementById('gpsBar').style.display = 'flex';
+  document.getElementById('gpsBar').classList.add('show');
   updateGpsBar(null);
 
   gpsWatcher = navigator.geolocation.watchPosition(
     pos => {
-      const acc = pos.coords.accuracy;
-      if (!bestPos || acc < bestPos.coords.accuracy) bestPos = pos;
-      updateGpsBar(acc);
+      if (!bestPos || pos.coords.accuracy < bestPos.coords.accuracy) bestPos = pos;
+      updateGpsBar(pos.coords.accuracy);
     },
     err => {
-      stopGpsWatch();
-      let msg = '❌ Impossibile rilevare la posizione';
-      if (err.code === 1) msg = '❌ Permesso GPS negato';
-      showToast(msg, true);
+      navigator.geolocation.clearWatch(gpsWatcher);
+      gpsWatcher = null;
+      gpsActive  = false;
+      bestPos    = null;
+      btn.style.background = '';
+      btn.classList.remove('gps-active');
+      document.getElementById('parkBtnText').textContent = 'Salva Parcheggio';
+      document.getElementById('gpsBar').classList.remove('show');
+      showToast(err.code === 1 ? '❌ Permesso GPS negato' : '❌ Impossibile rilevare posizione', true);
     },
     { enableHighAccuracy: true, maximumAge: 0 }
   );
-}
-
-function confirmParking() {
-  if (!bestPos) { showToast('⏳ Aspetta il GPS…', true); return; }
-  const savedPos = bestPos; // salva prima di stopGpsWatch che azzera bestPos
-  stopGpsWatch();
-
-  const { latitude: lat, longitude: lng, accuracy } = savedPos.coords;
-  const car = config?.cars[selectedCar] || { name: selectedCar === 0 ? 'Auto 1' : 'Auto 2', plate: '—' };
-
-  currentParking = { lat, lng, accuracy, time: new Date().toISOString(), car: selectedCar, carName: car.name, plate: car.plate };
-  parkHistory.unshift(currentParking);
-  if (parkHistory.length > 10) parkHistory.pop();
-  localStorage.setItem('noi_history', JSON.stringify(parkHistory));
-
-  showStatusCard(currentParking);
-  renderHistory();
-  showToast(accuracy <= 50 ? '📍 Parcheggio salvato!' : '📍 Salvato (GPS approssimativo)');
-}
-
-function stopGpsWatch() {
-  if (gpsWatcher !== null) { navigator.geolocation.clearWatch(gpsWatcher); gpsWatcher = null; }
-  bestPos = null;
-  document.getElementById('parkBtn').style.background = '';
-  document.getElementById('parkBtnText').textContent = 'Salva Parcheggio';
-  document.getElementById('gpsBar').style.display = 'none';
 }
 
 function updateGpsBar(acc) {
   const dot = document.getElementById('gpsDot');
   const bar = document.getElementById('gpsProgress');
   const txt = document.getElementById('gpsAccText');
-
   if (acc === null) {
-    dot.style.background = 'var(--muted)';
-    bar.style.width = '0%';
-    bar.style.background = 'var(--muted)';
-    txt.textContent = '…';
-    txt.style.color = 'var(--muted)';
+    dot.style.background = 'var(--muted)'; bar.style.width = '0%';
+    bar.style.background = 'var(--muted)'; txt.textContent = '…'; txt.style.color = 'var(--muted)';
     return;
   }
-
   const quality = acc <= 10 ? 100 : acc <= 20 ? 85 : acc <= 50 ? 65 : acc <= 100 ? 40 : acc <= 500 ? 20 : 5;
   const color   = acc <= 50 ? '#00e676' : acc <= 200 ? '#ffd600' : '#ff5252';
-
   dot.style.background = color;
   bar.style.width      = quality + '%';
   bar.style.background = color;
@@ -601,24 +496,33 @@ function updateGpsBar(acc) {
   txt.style.color      = color;
 }
 
+function showStatusCard(p) {
+  document.getElementById('statusCard').classList.add('visible');
+  const { hh, mm, dd, mo } = fmt(p.time);
+  document.getElementById('statusTitle').textContent = p.carName + ' parcheggiata';
+  document.getElementById('statusTime').textContent  = dd + '/' + mo + ' ' + hh + ':' + mm;
+  document.getElementById('coordsRow').innerHTML =
+    '<span>LAT</span> ' + p.lat.toFixed(6) + '<br><span>LNG</span> ' + p.lng.toFixed(6) + '<br><span>ACC</span> ±' + Math.round(p.accuracy) + 'm';
+  document.getElementById('mapsLink').href = mapUrl(p);
+  const btn = document.getElementById('tgBtn');
+  btn.disabled = !config?.tgChatId || !config?.tgToken;
+}
 
 // ── TELEGRAM ─────────────────────────────────────
 async function sendTelegram() {
   if (!config?.tgChatId || !config?.tgToken || !currentParking) return;
   setLoading(true, 'Invio su Telegram…');
-
   const { hh, mm, dd, mo } = fmt(currentParking.time);
-  const text = `🅿️ ${currentParking.carName} parcheggiata!\n📅 ${dd}/${mo} alle ${hh}:${mm}\n📍 ${mapUrl(currentParking)}\n±${Math.round(currentParking.accuracy)}m`;
-
+  const text = '🅿️ ' + currentParking.carName + ' parcheggiata!\n📅 ' + dd + '/' + mo + ' alle ' + hh + ':' + mm + '\n📍 ' + mapUrl(currentParking) + '\n±' + Math.round(currentParking.accuracy) + 'm';
   try {
-    const res  = await fetch(`https://api.telegram.org/bot${config.tgToken}/sendMessage`, {
+    const res  = await fetch('https://api.telegram.org/bot' + config.tgToken + '/sendMessage', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ chat_id: config.tgChatId, text })
     });
     const data = await res.json();
     setLoading(false);
-    data.ok ? showToast('✈️ Inviato su Telegram!') : showToast('❌ ' + (data.description || 'Errore'), true);
+    data.ok ? showToast('✈️ Inviato su Telegram!') : showToast('❌ ' + (data.description || 'Errore Telegram'), true);
   } catch {
     setLoading(false);
     showToast('❌ Errore di rete', true);
@@ -629,22 +533,15 @@ async function sendTelegram() {
 function renderHistory() {
   const list = document.getElementById('historyList');
   if (!parkHistory.length) { list.innerHTML = '<div class="empty-history">Nessun parcheggio salvato ancora 🅿️</div>'; return; }
+  const icons = ['🚗','🚙'];
   list.innerHTML = parkHistory.slice(0,5).map(p => {
     const { hh, mm, dd, mo } = fmt(p.time);
-    const icons = ['🚗','🚙'];
-    return `<div class="history-item">
-      <span class="history-car">${icons[p.car]||'🚗'}</span>
-      <div class="history-info">
-        <div class="h-name">${p.carName}${p.plate && p.plate!=='—' ? ' · '+p.plate : ''}</div>
-        <div class="h-time">${dd}/${mo} ${hh}:${mm} · ±${Math.round(p.accuracy)}m</div>
-      </div>
-      <a class="history-link" href="${mapUrl(p)}" target="_blank">Vedi 📍</a>
-    </div>`;
+    return '<div class="history-item"><span class="history-car">' + (icons[p.car]||'🚗') + '</span><div class="history-info"><div class="h-name">' + p.carName + (p.plate && p.plate !== '—' ? ' · ' + p.plate : '') + '</div><div class="h-time">' + dd + '/' + mo + ' ' + hh + ':' + mm + ' · ±' + Math.round(p.accuracy) + 'm</div></div><a class="history-link" href="' + mapUrl(p) + '" target="_blank">Vedi 📍</a></div>';
   }).join('');
 }
 
 // ── UTILS ────────────────────────────────────────
-function mapUrl(p) { return `https://www.google.com/maps?q=${p.lat},${p.lng}`; }
+function mapUrl(p) { return 'https://www.google.com/maps?q=' + p.lat + ',' + p.lng; }
 
 function fmt(iso) {
   const t = new Date(iso);
@@ -661,16 +558,16 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
 }
 
-function setLoading(show, text = '') {
+function setLoading(show, text) {
   if (text) document.getElementById('loadingText').textContent = text;
   document.getElementById('loading').classList.toggle('show', show);
 }
 
 let toastTimer;
-function showToast(msg, isError = false) {
+function showToast(msg, isError) {
   const t = document.getElementById('toast');
   t.textContent = msg;
-  t.classList.toggle('error', isError);
+  t.classList.toggle('error', !!isError);
   t.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
